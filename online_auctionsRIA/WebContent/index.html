@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Login page</title>
+<script src="utils.js" charset="utf-8" defer></script>
+<script src="loginManagement.js" charset="utf-8" defer></script>
+<script src="registrationManagement.js" charset="utf-8" defer></script>
+
+</head>
+<body>
+	<h1>Welcome to the online auctions application</h1>
+
+	<form id="logform" action="#">
+	<fieldset>
+		Username: <input type="text" name="username" required> <br>
+		Password: <input type="password" name="pwd" required><br>
+		<input id="loginbutton" type="button" value="login">
+		<p id="errormessage"></p>
+	</fieldset></form>
+
+	<div class="centered-block">
+		<form id="regform" action="#">
+			<span>Register </span> <br> 
+			<input type="text" name="newUsername" placeholder="Username" required> <br> 
+			<input type="password" name="pwd" placeholder="Password" required> <br>
+			<input type="text" name="address" placeholder="Address" required> <br> 
+			<input id="registerbutton" type="submit" value="Register">
+		</form>
+		<p id="regmessage"></p>
+	</div>
+
+</body>

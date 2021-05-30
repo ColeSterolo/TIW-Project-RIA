@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-import org.apache.jasper.tagplugins.jstl.core.If;
+
 
 import online_auctionsRIA.beans.*;
 import online_auctionsRIA.utils.OfferItem;
