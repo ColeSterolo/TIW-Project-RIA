@@ -3,6 +3,8 @@ package online_auctionsRIA.controllers;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 
 import javax.security.auth.login.CredentialException;
 import javax.servlet.ServletException;
@@ -69,7 +71,12 @@ public class CheckLogin extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.getWriter().println("Incorrect credentials");
 		} else {
+			
+			Instant loginTime = Instant.now();
+			loginTime = loginTime.plus(Duration.ofHours(2));
+			
 			request.getSession().setAttribute("user", user);
+			request.getSession().setAttribute("loginTime", loginTime);
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");

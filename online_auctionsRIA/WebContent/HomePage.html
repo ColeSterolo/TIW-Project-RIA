@@ -4,14 +4,37 @@
 <meta charset="ISO-8859-1">
 <title>Login page</title>
 <script src="utils.js" charset="utf-8" defer></script>
-<script src="loginManagement.js" charset="utf-8" defer></script>
+<script src="homeManagement.js" charset="utf-8" defer></script>
 
 </head>
 <body>
 	<h1>Welcome to the home page</h1>
+	 
+	
+	<div id="sellPage">
+		
+		<div>
+		<h2>Open auctions</h2>
+		<p id="openAuctions_message"></p>
+		<table id="openAuctions_table" class="boxed">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Item id</th>
+					<th>Item description</th>
+					<th>Time remaining</th>
+					<th>Image</th>
+					<th>Max offer</th>
+				</tr>
+			</thead>
+			<tbody id="openAuctions_body">
+			</tbody>
+		</table>
+		</div>
+
+	</div>
 	
 	
-	<div id="sellPage"></div>
 	
 	<div id="buyPage"></div>
 	

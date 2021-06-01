@@ -2,7 +2,7 @@
  * Login management
  */
 
-(function() { // avoid variables ending up in the global scope
+(function() {
 
   document.getElementById("loginbutton").addEventListener('click', () => {
     var form = document.getElementById("logform");
