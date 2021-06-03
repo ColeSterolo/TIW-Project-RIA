@@ -31,6 +31,55 @@
 			</tbody>
 		</table>
 		</div>
+		
+		
+		<div>
+		<h2>Closed auctions</h2>
+		<p id="closedAuctions_message"></p>
+		<table id="closedAuctions_table" class="boxed">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Item id</th>
+					<th>Item description</th>
+					<th>Image</th>
+					<th>Auction Winner</th>
+					<th>Winner Address</th>
+				</tr>
+			</thead>
+			<tbody id="closedAuctions_body">
+			</tbody>
+		</table>
+		</div>
+		
+		<div id="sellForm_div" class="sellForm">
+		<form id="sellForm_form" class="sellForm" action="#" enctype="multipart/form-data">
+			<h2>Complete the form to create a new auction</h2>
+				<fieldset>
+				<p class ="sellPage">
+					Item name: <input class="sellPage" type="text" name="itemName" required />
+				</p>
+				<p class ="sellPage">
+					Item description: <input class="sellPage" type="text" name="description" />
+				</p>
+				<p class ="sellPage">
+					Initial price: <input class="sellPage" type="number" name="initialPrice" required />
+				</p>
+				<p class ="sellPage">
+					Item image: <input class="sellPage" type="file" accept="image/png/jpg" name="picture">
+				</p>
+				<p class ="sellPage">
+					Minimum bid: <input class="sellPage" type="number" name="minBid" required />
+				</p>
+				<p class ="sellPage">
+					Auction expiry time: <input class="sellPage" type="datetime" name="expiryTime" required><br>
+				</p>
+				<p id="sellForm_message"></p>
+				
+				<input id="createAuctionButton" type="submit" name="Create Auction" value="Create">
+			</fieldset>
+		</form>
+	</div>
 
 	</div>
 	
