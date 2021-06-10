@@ -26,7 +26,7 @@ public class OfferDAO {
 
 		List<Offer> offers = new ArrayList<Offer>();
 		Offer offer = null;
-		String query = "SELECT * FROM offer WHERE offer.auction = ?";
+		String query = "SELECT * FROM offer WHERE offer.auction = ? ORDER BY amount DESC";
 
 		try (PreparedStatement pstatement = con.prepareStatement(query);) {
 			pstatement.setInt(1, auction);

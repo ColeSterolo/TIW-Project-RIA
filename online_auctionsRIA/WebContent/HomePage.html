@@ -4,6 +4,7 @@
 <meta charset="ISO-8859-1">
 <title>Login page</title>
 <script src="utils.js" charset="utf-8" defer></script>
+<script src="moment.js"></script>
 <script src="homeManagement.js" charset="utf-8" defer></script>
 
 </head>
@@ -94,32 +95,30 @@
 
 
 	<div id="buyPage">
+
 		<div id="searchForm_div" class="searchForm">
-			<form id="searchForm_form" class="searchForm" action="#"
-				enctype="multipart/form-data">
+			<form id="searchForm_form" class="searchForm" action="#">
 				<h2>Search</h2>
 				<fieldset>
-					<p class="sellPage">
-						<input class="sellPage" type="text" placeholder="Search" name="Search"
-							required />
+					<p>
+						<input id="user_input" type="text" placeholder="Search"
+							name="keyword" required />
 					</p>
 					<p id="searchForm_message"></p>
-					<input id="searchButton" type="submit" name="Search">
+					<input id="searchButton" type="submit">
 				</fieldset>
 			</form>
 		</div>
-		
+
 		<div>
 			<p id="searchResults_message"></p>
+			<h2>Search results</h2>
 			<table id="searchResults_table" class="boxed">
 				<thead>
 					<tr>
-						<th>Name</th>
-						<th>Item id</th>
-						<th>Item description</th>
-						<th>Image</th>
-						<th>Auction Winner</th>
-						<th>Winner Address</th>
+						<th>AuctionId</th>
+						<th>EndingTime</th>
+						<th>RemainingTime</th>
 					</tr>
 				</thead>
 				<tbody id="searchResults_body">
@@ -133,31 +132,28 @@
 			<table id="winningOffers_table" class="boxed">
 				<thead>
 					<tr>
-						<th>Name</th>
-						<th>Item id</th>
-						<th>Item description</th>
+						<th>OfferId</th>
+						<th>FinalAmount</th>
+						<th>AuctionId</th>
+						<th>Item</th>
+						<th>Description</th>
 						<th>Image</th>
-						<th>Auction Winner</th>
-						<th>Winner Address</th>
 					</tr>
 				</thead>
 				<tbody id="winningOffers_body">
 				</tbody>
 			</table>
 		</div>
-		
+
 		<div>
-			<h2></h2>
+			<h2>Recently seen</h2>
 			<p id="visitedAuctions_message"></p>
 			<table id="visitedAuctions_table" class="boxed">
 				<thead>
 					<tr>
-						<th>Name</th>
-						<th>Item id</th>
-						<th>Item description</th>
-						<th>Image</th>
-						<th>Auction Winner</th>
-						<th>Winner Address</th>
+						<th>AuctionId</th>
+						<th>EndingTime</th>
+						<th>RemainingTime</th>
 					</tr>
 				</thead>
 				<tbody id="visitedAuctions_body">
@@ -166,6 +162,49 @@
 		</div>
 	</div>
 
+	<div id="offer_page">
+		<div>
+			<table id="items_table">
+				<thead>
+					<tr>
+						<th>ItemId</th>
+						<th>ItemName</th>
+						<th>Description</th>
+						<th>Image</th>
+				</thead>
+				<tbody id="items_body">
+
+				</tbody>
+			</table>
+		</div>
+
+
+		<div class="postOffer">
+			<form id="postOffer_form" action="#">
+				<h2>Are you interested in this auction? Here you can make your
+					offer:</h2>
+				<input type="text" name="amount" placeholder="Amount" required />
+				<input id="postOffer_auction" type="hidden" name="auction">
+				<input id="postOffer_button" type="submit" value="Post Offer">
+			</form>
+		</div>
+
+		<div id="offers_div">
+			<h2>Up to now, the following offers have been received:</h2>
+			<table id="offers_table">
+				<thead>
+					<tr>
+						<th>OfferId</th>
+						<th>BidderId</th>
+						<th>Amount</th>
+						<th>OfferDateTime</th>
+					</tr>
+				</thead>
+				<tbody id="offers_body">
+				</tbody>
+			</table>
+		</div>
+	</div>
 
 </body>
 </html>

@@ -1,8 +1,5 @@
 package online_auctionsRIA.beans;
 
-
-
-import java.sql.Date;
 import java.time.Instant;
 
 public class AuctionBean {
