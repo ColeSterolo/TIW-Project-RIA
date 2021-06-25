@@ -12,7 +12,7 @@ public class AuctionJoinItem {
 	
 	private Item item;
 	
-	private AuctionBean auction;
+	private AuctionUtil auction;
 	
 	private int remainingDays;
 	
@@ -26,7 +26,7 @@ public class AuctionJoinItem {
 	
 	public AuctionJoinItem() {
 		item = new Item();
-		auction = new AuctionBean();
+		auction = new AuctionUtil();
 	}
 	
 	public int getMaxOffer() {
@@ -45,11 +45,11 @@ public class AuctionJoinItem {
 		this.item = item;
 	}
 
-	public AuctionBean getAuction() {
+	public AuctionUtil getAuction() {
 		return auction;
 	}
 
-	public void setAuction(AuctionBean auction) {
+	public void setAuction(AuctionUtil auction) {
 		this.auction = auction;
 	}
 

@@ -14,7 +14,7 @@
 
 	<div id="sellPage">
 
-		<div>
+		<div id="openAuctions_div">
 			<h2>Open auctions</h2>
 			<p id="openAuctions_message"></p>
 			<table id="openAuctions_table" class="boxed">
@@ -32,9 +32,24 @@
 				</tbody>
 			</table>
 		</div>
+		
+		<div id ="openAuctionDetails_div">  <!-- To be set hidden as default in the css -->
+			<h2 id = "auctionDetails_h2"></h2>
+			<p id="openAuctionDetails_message"></p>
+			<table id="openAuctionDetails_table" class="boxed">
+				<thead>
+					<tr>
+						<th>Offer amount</th>
+						<th>Bidder</th>
+					</tr>
+				</thead>
+				<tbody id="openAuctionDetails_body">
+				</tbody>
+			</table>
+		</div>
 
 
-		<div>
+		<div id="closedAuction_div">
 			<h2>Closed auctions</h2>
 			<p id="closedAuctions_message"></p>
 			<table id="closedAuctions_table" class="boxed">
@@ -51,6 +66,7 @@
 				<tbody id="closedAuctions_body">
 				</tbody>
 			</table>
+			<p id="closedAuctionDetails"></p>
 		</div>
 
 		<div id="sellForm_div" class="sellForm">
