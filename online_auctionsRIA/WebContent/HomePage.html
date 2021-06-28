@@ -14,8 +14,8 @@
 
 	<div id="sellPage">
 
-		<div id="openAuctions_div">
-			<h2>Open auctions</h2>
+		<div id="openAuctions_div" class="sellPage">
+			<h2 id="openAuctions_h2">Open auctions</h2>
 			<p id="openAuctions_message"></p>
 			<table id="openAuctions_table" class="boxed">
 				<thead>
@@ -50,7 +50,7 @@
 		</div>
 
 
-		<div id="closedAuction_div">
+		<div id="closedAuctions_div" class="sellPage">
 			<h2>Closed auctions</h2>
 			<p id="closedAuctions_message"></p>
 			<table id="closedAuctions_table" class="boxed">
@@ -70,7 +70,7 @@
 			<p id="closedAuctionDetails"></p>
 		</div>
 
-		<div id="sellForm_div" class="sellForm">
+		<div id="sellForm_div" class="sellForm sellPage">
 			<form id="sellForm_form" class="sellForm" action="#"
 				enctype="multipart/form-data">
 				<h2>Complete the form to create a new auction</h2>
@@ -106,6 +106,8 @@
 				</fieldset>
 			</form>
 		</div>
+		
+		<button id="goToBuyPageButton" class="sellPage">Go to buy page</button>
 
 	</div>
 
@@ -113,7 +115,7 @@
 
 	<div id="buyPage">
 
-		<div id="searchForm_div" class="searchForm">
+		<div id="searchForm_div" class="searchForm buyPage">
 			<form id="searchForm_form" class="searchForm" action="#">
 				<h2>Search</h2>
 				<fieldset>
@@ -127,7 +129,7 @@
 			</form>
 		</div>
 
-		<div>
+		<div class="buyPage">
 			<p id="searchResults_message"></p>
 			<h2>Search results</h2>
 			<table id="searchResults_table" class="boxed">
@@ -143,7 +145,7 @@
 			</table>
 		</div>
 
-		<div>
+		<div class="buyPage">
 			<h2>Winning offers</h2>
 			<p id="winningOffers_message"></p>
 			<table id="winningOffers_table" class="boxed">
@@ -162,7 +164,7 @@
 			</table>
 		</div>
 
-		<div>
+		<div class="buyPage">
 			<h2>Recently seen</h2>
 			<p id="visitedAuctions_message"></p>
 			<table id="visitedAuctions_table" class="boxed">
@@ -179,7 +181,7 @@
 		</div>
 	</div>
 
-	<div id="offer_page">
+	<div id="offer_page" class="buyPage">
 		<div>
 			<table id="items_table">
 				<thead>
@@ -196,7 +198,7 @@
 		</div>
 
 
-		<div class="postOffer">
+		<div class="postOffer" class="buyPage">
 			<form id="postOffer_form" action="#">
 				<h2>Are you interested in this auction? Here you can make your
 					offer:</h2>
@@ -206,7 +208,7 @@
 			</form>
 		</div>
 
-		<div id="offers_div">
+		<div id="offers_div" class="buyPage">
 			<h2>Up to now, the following offers have been received:</h2>
 			<table id="offers_table">
 				<thead>
@@ -221,6 +223,9 @@
 				</tbody>
 			</table>
 		</div>
+		
+		<button id="goToSellPageButton" class="buyPage">Go to sell page</button>
+		
 	</div>
 
 </body>

@@ -3,6 +3,9 @@
 (function() {
 
 	var pageOrchestrator = new PageOrchestrator();
+	var openAuctions, closedAuctions, auctionForm;
+	var searchAuctions, offersDetails;
+	var sellPage;
 
 	window.addEventListener("load", () => {
 
@@ -25,26 +28,39 @@
 
 		this.start = function(mode) {
 			console.log("orchestrator started");
+			buyPage = new BuyPage();
+			sellPage = new SellPage();
 			if (mode == 1) { //temporary, to be changed
 
-				//TODO
-				//buyPage = newBuyPage();
-				//buyPage.hide();
+				document.getElementById("goToBuyPageButton").addEventListener('click', (e) => {
+					e.preventDefault();
+					pageOrchestrator.start(2);
+				});
 
-				//TODO 
 				openAuctions = new OpenAuctions();
 				openAuctions.update();
 
-				//TODO
+				auctionDetails = new AuctionDetails();
+				auctionDetails.hide();
+
+
 				closedAuctions = new ClosedAuctions();
 				closedAuctions.update();
 
-				//TODO
-				//auctionForm = new AuctionForm();
-				//auctionForm.show();
+
+				auctionForm = new AuctionForm();
+				auctionForm.activateForm();
+
+				sellPage.show();
+				buyPage.hide();
 
 			}
 			else if (mode == 2) {
+
+				document.getElementById("goToSellPageButton").addEventListener('click', (e) => {
+					e.preventDefault();
+					pageOrchestrator.refresh(1);
+				});
 
 				searchAuctions = new SearchAuctions();
 				searchAuctions.activateSearch();
@@ -52,26 +68,89 @@
 				offersDetails = new OffersDetails();
 				offersDetails.hide();
 
-				//document.getElementById("sellPage").style.display = "none";
+				buyPage.show();
+				sellPage.hide();
 			}
 		}
+
+		/*		this.refresh = function(mode) {
+					if (mode == 1) {
+		
+						openAuctions.update();
+						closedAuctions.update();
+						auctionForm.activateForm();
+		
+						sellPage.show();
+						buyPage.hide();
+		
+					} else {
+		
+						searchAuctions.activateSearch();
+						offersDetails.hide();
+		
+						buyPage.show();
+						sellPage.hide();
+					}
+				}*/
 	}
 
 
+	function SellPage() {
+
+		this.hide = function() {
+			var i = 0;
+			var divs = document.getElementsByClassName("sellPage");
+			for (i = 0; i < divs.length; i++) {
+				divs[i].style.display = "none";
+			}
+		}
+
+
+		this.show = function() {
+			var divs = document.getElementsByClassName("sellPage");
+			for (i = 0; i < divs.length; i++) {
+				divs[i].style.display = "block";
+			}
+		}
+
+	}
+
+	function BuyPage() {
+
+		this.hide = function() {
+			var i = 0;
+			var divs = document.getElementsByClassName("buyPage");
+			for (i = 0; i < divs.length; i++) {
+				divs[i].style.display = "none";
+			}
+		}
+
+		this.show = function() {
+			var divs = document.getElementsByClassName("buyPage");
+			for (i = 0; i < divs.length; i++) {
+				divs[i].style.display = "block";
+			}
+		}
+
+	}
 
 	function OpenAuctions() {
 		var auctionList = null;
 
 		this.update = function() {
-			console.log("\n update started")
+
+			document.getElementById("openAuctions_message").innerHTML = "";
+			document.getElementById("openAuctions_body").innerHTML = "";
+
 			makeCall("GET", "GetOpenAuctions", null,
 				function(req) {
 					if (req.readyState == 4) {
 						var message = req.responseText;
 						if (req.status == 200) {
+
 							auctionList = JSON.parse(req.responseText);
 						} else {
-							//document.getElementById("openAuctions_message").textContent = message;
+							document.getElementById("openAuctions_message").textContent = message;
 							auctionList = null;
 						}
 
@@ -143,6 +222,10 @@
 				}
 			);
 		}
+
+		this.hide = function() {
+			document.getElementById("openAuctions_div").style.diplay = "none";
+		}
 	}
 
 	function AuctionDetails() {
@@ -157,9 +240,10 @@
 						if (req.status == 200) {
 							offers = JSON.parse(req.responseText);
 							document.getElementById("openAuctionDetails_body").innerHTML = "";
+							document.getElementById("openAuctionDetails_message").innerHTML = "";
 							if (isOpen) {
 								document.getElementById("auctionDetails_h2").innerHTML = "Auction " +
-								auction.auction.auctionId + " details: offers";
+									auction.auction.auctionId + " details: offers";
 								document.getElementById("openAuctionDetails_div").style.display = "block";
 								document.getElementById("closedAuctionDetails").innerHTML = "";
 
@@ -181,6 +265,11 @@
 										if (auction.remainingDays == 0 && auction.remainingHours == 0 && auction.remainingMinutes == 0) {
 											var button = document.createElement("button");
 											button.innerHTML = "Close auction";
+											button.addEventListener('click', (e) => {
+												e.preventDefault();
+												var closeAuction = new CloseAuction();
+												closeAuction.close(auction.auction.auctionId)
+											});
 											cell.appendChild(button);
 											row.appendChild(cell);
 
@@ -192,21 +281,32 @@
 								} else {
 									document.getElementById("openAuctionDetails_table").style.display = "none";
 									openAuctionDetails_message.innerHTML = "No offers";
+
+									if (auction.remainingDays == 0 && auction.remainingHours == 0 && auction.remainingMinutes == 0) {
+										var button = document.createElement("button");
+										button.innerHTML = "Close auction";
+										button.addEventListener('click', (e) => {
+											e.preventDefault();
+											var closeAuction = new CloseAuction();
+											closeAuction.close(auction.auction.auctionId)
+										});
+										document.getElementById("openAuctionDetails_div").appendChild(button);
+									}
 								}
 
 							} else {
-								document.getElementById("openAuctionDetails_div").style.display = "none";	
-									
-									if(offers != null && offers.length > 0){
-										var offer = offers[0];
-										
-										document.getElementById("closedAuctionDetails").innerHTML = "The winner of the auction was " +
+								document.getElementById("openAuctionDetails_div").style.display = "none";
+
+								if (offers != null && offers.length > 0) {
+									var offer = offers[0];
+
+									document.getElementById("closedAuctionDetails").innerHTML = "The winner of the auction was " +
 										offer.user.username + "who offered " + offer.offer.amount + "\n" +
-										"The address of the winner is "	+ offer.user.address;	
-														
-										}else {
-											document.getElementById("closedAuctionDetails").innerHTML = "This auction had no offers";
-										}
+										"The address of the winner is " + offer.user.address;
+
+								} else {
+									document.getElementById("closedAuctionDetails").innerHTML = "This auction had no offers";
+								}
 							}
 
 
@@ -218,6 +318,37 @@
 				}
 			);
 		}
+
+		this.hide = function() {
+			document.getElementById("openAuctionDetails_div").style.diplay = "none";
+		}
+
+	}
+
+	function CloseAuction() {
+
+		this.close = function(auctionId) {
+			makeCall("POST", "CloseAuction?auctionId=" + auctionId, null,
+				function(req) {
+					if (req.readyState == XMLHttpRequest.DONE) {
+						var message = req.responseText;
+						switch (req.status) {
+							case 200:
+								openAuctions.update();
+								closedAuctions.update();
+								message.innerHTML = "Auction closed succesfully";
+								break;
+							case 400: // bad request
+								document.getElementById("errormessage").textContent = message;
+								break;
+							case 502: // server error
+								document.getElementById("errormessage").textContent = message;
+								break;
+						}
+					}
+				});
+		}
+
 	}
 
 
@@ -225,7 +356,10 @@
 		var auctionList = null;
 
 		this.update = function() {
-			//console.log("\n update started")
+
+			document.getElementById("closedAuctions_message").innerHTML = "";
+			document.getElementById("closedAuctions_body").innerHTML = "";
+
 			makeCall("GET", "GetClosedAuctions", null,
 				function(req) {
 					if (req.readyState == 4) {
@@ -281,7 +415,7 @@
 									cell.innerHTML = "No offers";
 									row.appendChild(cell);
 								}
-								
+
 								cell = document.createElement("td");
 								var button = document.createElement("button");
 								button.innerHTML = "show details";
@@ -308,6 +442,10 @@
 						}
 					}
 				});
+		}
+
+		this.hide = function() {
+			document.getElementById("closedAuctions_div").style.diplay = "none";
 		}
 
 	}
@@ -348,10 +486,11 @@
 					form.reportValidity();
 				}
 			}, false);
-
-
 		}
 
+		this.hide = function() {
+			document.getElementById("sellForm_div").style.diplay = "none";
+		}
 	}
 
 	function SearchAuctions() {
@@ -557,6 +696,5 @@
 		}
 
 	}
-
 
 }());
