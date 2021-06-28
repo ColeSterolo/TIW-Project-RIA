@@ -10,9 +10,9 @@
 			window.location.href = "index.html";
 		} else {
 
-			if (localStorage.getItem('lastAction') == null) {
-				pageOrchestrator.start(1);
-			} else if (localStorage.getItem("lastAction") == "creation") {
+			if (getCookie('lastAction') == null) {
+				pageOrchestrator.start(2);
+			} else if (getCookie("lastAction") == "creation") {
 				pageOrchestrator.start(2);
 			} else {
 				pageOrchestrator.start(3);
@@ -69,16 +69,13 @@
 					if (req.readyState == 4) {
 						var message = req.responseText;
 						if (req.status == 200) {
-							console.log("request ajax succesful\n");
 							auctionList = JSON.parse(req.responseText);
-							console.log("number of auctions: " + auctionList.length);
 						} else {
 							//document.getElementById("openAuctions_message").textContent = message;
 							auctionList = null;
 						}
 
 						if (auctionList != null && auctionList.length > 0) {
-							console.log("open auctions != null");
 							auctionList.forEach(function(auction) {
 
 								var row = document.createElement("tr");
@@ -374,7 +371,6 @@
 								switch (req.status) {
 									case 200:
 										self.update(JSON.parse(req.responseText));
-										console.log("Search results")
 										break;
 									case 400: // bad request
 										document.getElementById("errormessage").textContent = message;
@@ -456,8 +452,9 @@
 							document.getElementById("offer_page").display = "block";
 						}
 					}
-				});
-
+				}
+			);	
+			addVisitedAuction(auctionId);
 		}
 
 		this.update = function() {
