@@ -19,6 +19,20 @@ function makeCall(method, url, formElement, cback, reset = true) {
 }
 
 /**
+ * AJAX call for POST without form
+ */
+
+function makePostCall(url, parameter, cback) {
+	var req = new XMLHttpRequest();   // new HttpRequest instance 
+	req.onreadystatechange = function() {
+		cback(req)
+	};
+	req.open("POST", url);
+	req.setRequestHeader("Content-Type", "application/json");
+	req.send(JSON.stringify(parameter));
+}
+
+/**
  * This function returns a String containing the time difference 
  * between the moments end and start in days, hours and minutes
  */
@@ -76,6 +90,21 @@ function setCookie(cname, cvalue) {
 	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
 	let expires = "expires=" + d.toUTCString();
 	document.cookie = cname + "=" + cvalue + ";" + expires;
+}
+
+/**
+ * This function returns a vector containing all the ids of the visited auctions
+ */
+function getVisitedAuctions() {
+	let ids = [];
+	document.cookie.split(';').forEach(function(el) {
+		let [key, value] = el.split('=');
+		key = key.trim(); //trim() removes white spaces
+		if (key != "lastAction") {
+			ids.push(value);
+		}
+	})
+	return ids;
 }
 
 function addVisitedAuction(id) {
