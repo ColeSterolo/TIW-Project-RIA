@@ -311,6 +311,50 @@ public class AuctionDAO {
 		}
 		return minBid;
 	}
+	
+	public List<AuctionBean> getAuctionsById(List<Integer> ids) throws SQLException{
+		
+		int i = 0;
+		List<AuctionBean> auctions = new ArrayList<AuctionBean>();
+		
+		if(ids != null && !ids.isEmpty()) {
+			String queryString = "SELECT * FROM auction WHERE auctionId = ?";
+			
+			for(Integer integer : ids) {
+				queryString = queryString + " OR ?";
+			}
+			
+			queryString = queryString + " WHERE closedFlag = false";
+			
+			try (PreparedStatement pstatement = con.prepareStatement(queryString);) {
+				for(i=0; i < ids.size(); i++) {
+					pstatement.setInt(i, ids.get(i));
+				}
+				
+				try(ResultSet result = pstatement.executeQuery();) {
+					while(result.next()) {
+						AuctionBean auction = new AuctionBean();
+						auction.setAuctionId(result.getInt("auctionId"));
+						auction.setVendor(result.getInt("vendor"));
+						auction.setStartingTime(result.getTimestamp("startingTime").toInstant());
+						auction.setEndingTime(result.getTimestamp("endingTime").toInstant());
+						auction.setClosedFlag(result.getBoolean("closedFlag"));
+						auction.setInitialPrice(result.getInt("initialPrice"));
+						auction.setMinimumBid(result.getInt("minimumBid"));
+
+						auctions.add(auction);
+					}
+				}
+				
+				if(!auctions.isEmpty()) 
+					return auctions;
+				else 
+					return null;
+				
+			}
+		}
+		else return null;
+	}
 
 }
 
