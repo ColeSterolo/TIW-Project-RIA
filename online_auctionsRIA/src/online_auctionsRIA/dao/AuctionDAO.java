@@ -314,21 +314,20 @@ public class AuctionDAO {
 	
 	public List<AuctionBean> getAuctionsById(List<Integer> ids) throws SQLException{
 		
-		int i = 0;
+		int idCounter;
 		List<AuctionBean> auctions = new ArrayList<AuctionBean>();
 		
 		if(ids != null && !ids.isEmpty()) {
-			String queryString = "SELECT * FROM auction WHERE auctionId = ?";
+			String queryString = "SELECT * FROM auction WHERE closedFlag = false AND auctionId in (?";
 			
-			for(Integer integer : ids) {
-				queryString = queryString + " OR ?";
+			for(idCounter = 1; idCounter < ids.size(); idCounter++) {
+				queryString = queryString + ", ?";
 			}
-			
-			queryString = queryString + " WHERE closedFlag = false";
+			queryString = queryString + ")";
 			
 			try (PreparedStatement pstatement = con.prepareStatement(queryString);) {
-				for(i=0; i < ids.size(); i++) {
-					pstatement.setInt(i, ids.get(i));
+				for(idCounter = 0; idCounter < ids.size(); idCounter++) {
+					pstatement.setInt(idCounter + 1, ids.get(idCounter));
 				}
 				
 				try(ResultSet result = pstatement.executeQuery();) {

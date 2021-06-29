@@ -47,7 +47,6 @@
 				closedAuctions = new ClosedAuctions();
 				closedAuctions.update();
 
-
 				auctionForm = new AuctionForm();
 				auctionForm.activateForm();
 
@@ -67,6 +66,9 @@
 
 				offersDetails = new OffersDetails();
 				offersDetails.hide();
+
+				visitedAuctions = new VisitedAuctions();
+				visitedAuctions.update();
 
 				buyPage.show();
 				sellPage.hide();
@@ -698,67 +700,67 @@
 	}
 
 	function VisitedAuctions() {
+		var self = this;
 
-		this.show = function() {
+		this.update = function() {
 			ids = getVisitedAuctions();
-			toSend = {
-				data: {
-					auctionIds: ids
-				}
+			parameter = {
+				auctionIds: ids
 			}
-			makePostCall("GetAuctionsById", toSend, 
-				function(req) {
-					if (req.readyState == 4) {
-						var message = req.responseText;
-						if (req.status == 200) {
-							var response = JSON.parse(message);
-							self.update(response[0]);
-							document.getElementById("offer_page").display = "block";
+			if (ids.length > 0) {
+				makeJsonPostCall("GetAuctionsById", "auctionIds", ids,
+					function(req) {
+						if (req.readyState == 4) {
+							var message = req.responseText;
+							if (req.status == 200) {
+								var response = JSON.parse(message);
+								self.show(response);
+							}
 						}
 					}
-				}
-			);
-		}
-
-			this.update = function(searchResults) {
-				var row, cell, anchor, anchorText;
-				if (searchResults != null) {
-					searchResults.forEach(function(auction) {
-						row = document.createElement("tr");
-						// write auction id link
-						cell = document.createElement("td");
-						anchor = document.createElement("a");
-						anchorText = document.createTextNode("Auction" + auction.auctionId);
-						anchor.appendChild(anchorText);
-						anchor.setAttribute('auctionid', auction.auctionId);
-						anchor.addEventListener("click", (e) => {
-							e.preventDefault();
-							offersDetails.show(auction.auctionId);
-						})
-						anchor.href = "#";
-						cell.appendChild(anchor);
-						row.appendChild(cell);
-						// write auction ending time
-						cell = document.createElement("td");
-						endingTime = moment.utc(auction.endingTime.seconds * 1000);
-						formattedEndingTime = endingTime.format('YYYY/MM/DD HH:mm');
-						cell.innerHTML = formattedEndingTime;
-						row.appendChild(cell);
-						// compute and write remaining days and hours
-						cell = document.createElement("td");
-						cell.innerHTML = timeDiffCalc(moment(formattedEndingTime), moment());
-						row.appendChild(cell);
-
-						document.getElementById("searchResults_body").appendChild(row);
-						document.getElementById("searchResults_table").style.visibility = "visible";
-					})
-
-				} else {
-					console.log("No auctions found")
-					document.getElementById("searchResults_table").style.visibility = "hidden";
-					document.getElementById("searchResults_message").innerHTML = "No auctions found";
-				}
+				);
 			}
 		}
 
-	} ());
+		this.show = function(searchResults) {
+			document.getElementById("visitedAuctions_body").innerHTML = "";
+			var row, cell, anchor, anchorText;
+			if (searchResults != null) {
+				searchResults.forEach( function(auction) {
+					row = document.createElement("tr");
+					// write auction id link
+					cell = document.createElement("td");
+					anchor = document.createElement("a");
+					anchorText = document.createTextNode("Auction" + auction.auctionId);
+					anchor.appendChild(anchorText);
+					anchor.setAttribute('auctionid', auction.auctionId);
+					anchor.addEventListener("click", (e) => {
+						e.preventDefault();
+						offersDetails.show(auction.auctionId);
+					})
+					anchor.href = "#";
+					cell.appendChild(anchor);
+					row.appendChild(cell);
+					// write auction ending time
+					cell = document.createElement("td");
+					endingTime = moment.utc(auction.endingTime.seconds * 1000);
+					formattedEndingTime = endingTime.format('YYYY/MM/DD HH:mm');
+					cell.innerHTML = formattedEndingTime;
+					row.appendChild(cell);
+					// compute and write remaining days and hours
+					cell = document.createElement("td");
+					cell.innerHTML = timeDiffCalc(moment(formattedEndingTime), moment());
+					row.appendChild(cell);
+
+					document.getElementById("visitedAuctions_body").appendChild(row);
+					document.getElementById("visitedAuctions_table").style.visibility = "visible";
+				})
+
+			} else {
+				console.log("No auctions found")
+				document.getElementById("visitedAuctions_table").style.visibility = "hidden";
+			}
+		}
+	}
+
+}());

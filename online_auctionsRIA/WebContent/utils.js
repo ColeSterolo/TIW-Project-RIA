@@ -19,17 +19,17 @@ function makeCall(method, url, formElement, cback, reset = true) {
 }
 
 /**
- * AJAX call for POST without form
+ * AJAX call management
  */
 
-function makePostCall(url, parameter, cback) {
-	var req = new XMLHttpRequest();   // new HttpRequest instance 
+function makeJsonPostCall(url, paramName, parameter, callback) {
+	var req = new XMLHttpRequest(); // visible by closure
 	req.onreadystatechange = function() {
-		cback(req)
-	};
+		callback(req)
+	}; // closure
 	req.open("POST", url);
-	req.setRequestHeader("Content-Type", "application/json");
-	req.send(JSON.stringify(parameter));
+	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	req.send(paramName + "=" + encodeURIComponent(JSON.stringify(parameter)));
 }
 
 /**
@@ -100,7 +100,8 @@ function getVisitedAuctions() {
 	document.cookie.split(';').forEach(function(el) {
 		let [key, value] = el.split('=');
 		key = key.trim(); //trim() removes white spaces
-		if (key != "lastAction") {
+		if (key != "lastAction" && key != "") {
+			value = parseInt(value);
 			ids.push(value);
 		}
 	})
