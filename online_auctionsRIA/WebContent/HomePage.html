@@ -130,7 +130,7 @@
 			</form>
 		</div>
 
-		<div class="buyPage">
+		<div class="buyPage" id="search_results">
 			<p id="searchResults_message"></p>
 			<h2>Search results</h2>
 			<table id="searchResults_table" class="boxed">
@@ -144,6 +144,52 @@
 				<tbody id="searchResults_body">
 				</tbody>
 			</table>
+		</div>
+
+		<div id="offer_page" class="buyPage">
+			<h2>Auction details</h2>
+			<div>
+				<table id="items_table">
+					<thead>
+						<tr>
+							<th>ItemId</th>
+							<th>ItemName</th>
+							<th>Description</th>
+							<th>Image</th>
+					</thead>
+					<tbody id="items_body">
+
+					</tbody>
+				</table>
+			</div>
+
+
+			<div class="postOffer" class="buyPage">
+				<form id="postOffer_form" action="#">
+					<h2>Are you interested in this auction? Here you can make your
+						offer:</h2>
+					<input type="text" name="amount" placeholder="Amount" required />
+					<input id="postOffer_auction" type="hidden" name="auction">
+					<input id="postOffer_button" type="submit" value="Post Offer">
+				</form>
+			</div>
+
+			<div id="offers_div" class="buyPage">
+				<h2>Up to now, the following offers have been received:</h2>
+				<table id="offers_table">
+					<thead>
+						<tr>
+							<th>OfferId</th>
+							<th>BidderId</th>
+							<th>Amount</th>
+							<th>OfferDateTime</th>
+						</tr>
+					</thead>
+					<tbody id="offers_body">
+					</tbody>
+				</table>
+			</div>
+
 		</div>
 
 		<div class="buyPage" id="winning_offers">
@@ -177,51 +223,6 @@
 					</tr>
 				</thead>
 				<tbody id="visitedAuctions_body">
-				</tbody>
-			</table>
-		</div>
-	</div>
-
-	<div id="offer_page" class="buyPage">
-		<h2>Auction details</h2>
-		<div>
-			<table id="items_table">
-				<thead>
-					<tr>
-						<th>ItemId</th>
-						<th>ItemName</th>
-						<th>Description</th>
-						<th>Image</th>
-				</thead>
-				<tbody id="items_body">
-
-				</tbody>
-			</table>
-		</div>
-
-
-		<div class="postOffer" class="buyPage">
-			<form id="postOffer_form" action="#">
-				<h2>Are you interested in this auction? Here you can make your
-					offer:</h2>
-				<input type="text" name="amount" placeholder="Amount" required /> <input
-					id="postOffer_auction" type="hidden" name="auction"> <input
-					id="postOffer_button" type="submit" value="Post Offer">
-			</form>
-		</div>
-
-		<div id="offers_div" class="buyPage">
-			<h2>Up to now, the following offers have been received:</h2>
-			<table id="offers_table">
-				<thead>
-					<tr>
-						<th>OfferId</th>
-						<th>BidderId</th>
-						<th>Amount</th>
-						<th>OfferDateTime</th>
-					</tr>
-				</thead>
-				<tbody id="offers_body">
 				</tbody>
 			</table>
 		</div>

@@ -64,15 +64,17 @@
 
 			}
 			else if (mode == 2) {
+				sellPage.hide();
+				buyPage.show();
 
 				searchAuctions.activateSearch();
-				offersDetails.hide();
+				searchAuctions.update();
+
+				offersDetails.update();
+
 				visitedAuctions.update();
 				winningOffers.show();
-				
 
-				buyPage.show();
-				sellPage.hide();
 			}
 		}
 
@@ -584,13 +586,12 @@
 	}
 
 	function SearchAuctions() {
+		var form = document.getElementById("searchForm_form");
+		var self = this;
 
 		this.activateSearch = function() {
 			document.getElementById("searchButton").addEventListener('click', (e) => {
 				e.preventDefault();
-				var form = document.getElementById("searchForm_form");
-				var self = this;
-				document.getElementById("searchResults_body").innerHTML = "";
 
 				if (form.checkValidity()) {
 					makeCall("GET", 'Search?keyword=' + document.getElementById('user_input').value, null,
@@ -618,11 +619,11 @@
 					form.reportValidity();
 				}
 			});
-
 		}
 
 		this.update = function(searchResults) {
 			var row, cell, anchor, anchorText;
+			document.getElementById("searchResults_body").innerHTML = "";
 			if (searchResults != null) {
 				searchResults.forEach(function(auction) {
 					row = document.createElement("tr");
@@ -651,13 +652,11 @@
 					row.appendChild(cell);
 
 					document.getElementById("searchResults_body").appendChild(row);
-					document.getElementById("searchResults_table").style.visibility = "visible";
+					document.getElementById("search_results").style.display = "block";
 				})
 
 			} else {
-				console.log("No auctions found")
-				document.getElementById("searchResults_table").style.visibility = "hidden";
-				document.getElementById("searchResults_message").innerHTML = "No auctions found";
+				document.getElementById("search_results").style.display = "none";
 			}
 		}
 
@@ -678,7 +677,7 @@
 							self.updateItems(response[0]);
 							self.updateOffers(response[1]);
 							self.activateOfferForm(auctionId);
-							document.getElementById("offer_page").display = "block";
+							document.getElementById("offer_page").style.display = "block";
 						}
 					}
 				}
@@ -687,7 +686,11 @@
 		}
 
 		this.update = function() {
-			self.show(auction);
+			if (auction != null) {
+				self.show(auction);
+			} else {
+				this.hide();
+			}
 		}
 
 		this.activateOfferForm = function(auctionId) {
@@ -779,6 +782,8 @@
 
 				document.getElementById("offers_body").appendChild(row);
 			})
+
+
 		}
 
 		this.hide = function() {
@@ -792,9 +797,6 @@
 
 		this.update = function() {
 			ids = getVisitedAuctions();
-			parameter = {
-				auctionIds: ids
-			}
 			if (ids.length > 0) {
 				makeJsonPostCall("GetAuctionsById", "auctionIds", ids,
 					function(req) {
