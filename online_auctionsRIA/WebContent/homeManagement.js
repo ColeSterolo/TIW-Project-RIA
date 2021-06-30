@@ -4,7 +4,7 @@
 
 	var pageOrchestrator = new PageOrchestrator();
 	var openAuctions, closedAuctions, auctionForm;
-	var searchAuctions, offersDetails, visitedAuctions;
+	var searchAuctions, offersDetails, visitedAuctions, winningOffers;
 	var sellPage;
 
 	document.getElementById("goToBuyPageButton").addEventListener('click', (e) => {
@@ -45,6 +45,7 @@
 		searchAuctions = new SearchAuctions();
 		offersDetails = new OffersDetails();
 		visitedAuctions = new VisitedAuctions();
+		winningOffers = new WinningOffers();
 
 		this.start = function(mode) {
 			console.log("orchestrator started");
@@ -65,10 +66,10 @@
 			else if (mode == 2) {
 
 				searchAuctions.activateSearch();
-
 				offersDetails.hide();
-
 				visitedAuctions.update();
+				winningOffers.show();
+				
 
 				buyPage.show();
 				sellPage.hide();
@@ -329,8 +330,8 @@
 		this.hide = function() {
 			document.getElementById("openAuctionDetails_div").style.diplay = "none";
 		}
-		
-		this.clear = function(){
+
+		this.clear = function() {
 			document.getElementById("openAuctionDetails_div").innerHTML = "";
 			document.getElementById("closedAuctionDetails").innerHTML = "";
 		}
@@ -503,6 +504,83 @@
 		this.hide = function() {
 			document.getElementById("sellForm_div").style.diplay = "none";
 		}
+	}
+
+	function WinningOffers() {
+		var self = this;
+
+		this.show = function() {
+			makeCall("GET", "GetWinningOffers", null,
+				function(req) {
+					if (req.readyState == XMLHttpRequest.DONE) {
+						var message = req.responseText;
+						switch (req.status) {
+							case 200:
+								self.update(JSON.parse(req.responseText));
+								break;
+							case 400: // bad request
+								document.getElementById("errormessage").textContent = message;
+								break;
+							case 401: // unauthorized
+								document.getElementById("errormessage").textContent = message;
+								break;
+							case 500: // server error
+								document.getElementById("errormessage").textContent = message;
+								break;
+						}
+					}
+				}
+			);
+		}
+
+		this.update = function(winningOffers) {
+			document.getElementById("winningOffers_body").innerHTML = "";
+			if (winningOffers != null) {
+				winningOffers.forEach(function(winningOffer) {
+					row = document.createElement("tr");
+
+					// write offer id
+					cell = document.createElement("td");
+					cell.innerHTML = winningOffer.offer.offerId;
+					row.appendChild(cell);
+
+					// write final amount
+					cell = document.createElement("td");
+					cell.innerHTML = winningOffer.offer.amount;
+					row.appendChild(cell);
+
+					// write auction id
+					cell = document.createElement("td");
+					cell.innerHTML = winningOffer.offer.auction;
+					row.appendChild(cell);
+
+					// write item name
+					cell = document.createElement("td");
+					cell.innerHTML = winningOffer.item.name;
+					row.appendChild(cell);
+
+					// write item description
+					cell = document.createElement("td");
+					cell.innerHTML = winningOffer.item.description;
+					row.appendChild(cell);
+
+					// print image
+					cell = document.createElement("td");
+					var image = new Image();
+					image.src = 'data:image/jpg;base64,' + winningOffer.item.image;
+					image.setAttribute("width", "200");
+					cell.appendChild(image);
+					row.appendChild(cell);
+
+					document.getElementById("winningOffers_body").appendChild(row);
+					document.getElementById("winningOffers_table").style.display = "block";
+				})
+
+			} else {
+				document.getElementById("winning_offers").style.display = "none";
+			}
+		}
+
 	}
 
 	function SearchAuctions() {
@@ -763,14 +841,20 @@
 					row.appendChild(cell);
 
 					document.getElementById("visitedAuctions_body").appendChild(row);
-					document.getElementById("visitedAuctions_table").style.visibility = "visible";
+					document.getElementById("visited_auctions").style.display = "block";
 				})
 
 			} else {
-				console.log("No auctions found")
-				document.getElementById("visitedAuctions_table").style.visibility = "hidden";
+				self.hide();
 			}
+
 		}
+
+		this.hide = function() {
+			document.getElementById("visited_auctions").style.display = "none";
+		}
+
+
 	}
 
 }());
