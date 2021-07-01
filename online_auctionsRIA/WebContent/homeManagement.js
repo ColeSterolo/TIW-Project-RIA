@@ -575,7 +575,7 @@
 					row.appendChild(cell);
 
 					document.getElementById("winningOffers_body").appendChild(row);
-					document.getElementById("winningOffers_table").style.display = "block";
+					document.getElementById("winning_offers").style.display = "block";
 				})
 
 			} else {
@@ -809,6 +809,8 @@
 						}
 					}
 				);
+			} else {
+				self.hide();
 			}
 		}
 
