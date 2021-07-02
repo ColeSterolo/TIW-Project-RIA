@@ -240,14 +240,15 @@
 		var offers = null;
 
 		this.showDetails = function(auction, isOpen) {
+
 			makeCall("GET", "GetOpenAuctionDetails?auctionId=" + auction.auction.auctionId, null,
 				function(req) {
 					if (req.readyState == 4) {
 						var message = req.responseText;
 						if (req.status == 200) {
 							offers = JSON.parse(req.responseText);
-							document.getElementById("openAuctionDetails_body").innerHTML = "";
 							document.getElementById("openAuctionDetails_message").innerHTML = "";
+							document.getElementById("openAuctionDetails_body").innerHTML = "";
 							if (isOpen) {
 								document.getElementById("auctionDetails_h2").innerHTML = "Auction " +
 									auction.auction.auctionId + " details: offers";
@@ -331,7 +332,7 @@
 		}
 		
 		this.clear = function(){
-			document.getElementById("openAuctionDetails_div").innerHTML = "";
+			document.getElementById("openAuctionDetails_body").innerHTML = "";
 			document.getElementById("closedAuctionDetails").innerHTML = "";
 		}
 
