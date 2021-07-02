@@ -333,15 +333,9 @@
 		this.hide = function() {
 			document.getElementById("openAuctionDetails_div").style.diplay = "none";
 		}
-<<<<<<< HEAD
-		
-		this.clear = function(){
-			document.getElementById("openAuctionDetails_body").innerHTML = "";
-=======
 
 		this.clear = function() {
-			document.getElementById("openAuctionDetails_div").innerHTML = "";
->>>>>>> branch 'master' of https://github.com/ColeSterolo/TIW-Project-RIA
+			document.getElementById("openAuctionDetails_body").innerHTML = "";
 			document.getElementById("closedAuctionDetails").innerHTML = "";
 		}
 
