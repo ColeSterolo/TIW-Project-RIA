@@ -2,15 +2,22 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Login page</title>
+<link rel="stylesheet" type="text/css" href="CSS/StyleSheet.css">
+
+<title>Online auctions</title>
 <script src="utils.js" charset="utf-8" defer></script>
 <script src="moment.js"></script>
 <script src="homeManagement.js" charset="utf-8" defer></script>
 
 </head>
 <body>
-	<h1>Welcome to the home page</h1>
 
+	<button id="goToSellPageButton" class="buyPage">Go to sell
+		page</button>
+
+	<button id="goToBuyPageButton" class="sellPage">Go to buy page</button>
+
+	<h1 class="page-title">Online auctions</h1>
 
 	<div id="sellPage">
 
@@ -33,8 +40,13 @@
 			</table>
 		</div>
 
+<<<<<<< HEAD
 		<div id="openAuctionDetails_div">
 			<!-- To be set hidden as default in the css (or in the js)-->
+=======
+		<div id="openAuctionDetails_div" class="sellPage">
+			<!-- To be set hidden as default in the css -->
+>>>>>>> branch 'master' of https://github.com/ColeSterolo/TIW-Project-RIA
 			<h2 id="auctionDetails_h2"></h2>
 			<p id="openAuctionDetails_message"></p>
 			<table id="openAuctionDetails_table" class="boxed">
@@ -48,7 +60,6 @@
 				</tbody>
 			</table>
 		</div>
-
 
 		<div id="closedAuctions_div" class="sellPage">
 			<h2>Closed auctions</h2>
@@ -70,70 +81,43 @@
 			<p id="closedAuctionDetails"></p>
 		</div>
 
-		<div id="sellForm_div" class="sellForm sellPage">
-			<form id="sellForm_form" class="sellForm" action="#"
-				enctype="multipart/form-data">
+		<div id="sellForm_div" class="sellPage">
+			<form id="sellForm_form" action="#" enctype="multipart/form-data">
 				<h2>Complete the form to create a new auction</h2>
-				<fieldset>
-					<p class="sellPage">
-						Item name: <input class="sellPage" type="text" name="itemName"
-							required />
-					</p>
-					<p class="sellPage">
-						Item description: <input class="sellPage" type="text"
-							name="description" />
-					</p>
-					<p class="sellPage">
-						Initial price: <input class="sellPage" type="number"
-							name="initialPrice" required />
-					</p>
-					<p class="sellPage">
-						Item image: <input class="sellPage" type="file"
-							accept="image/png/jpg" name="picture">
-					</p>
-					<p class="sellPage">
-						Minimum bid: <input class="sellPage" type="number" name="minBid"
-							required />
-					</p>
-					<p class="sellPage">
-						Auction expiry time: <input class="sellPage" type="datetime"
-							name="expiryTime" required><br>
-					</p>
-					<p id="sellForm_message"></p>
+				<input type="text" name="itemName" placeholder="Item name" required />
+				<input type="text" placeholder="Item description" name="description" />
+				<input type="number" placeholder="Initial price" name="initialPrice"
+					required /> <br> <input type="file" placeholder="Item image"
+					accept="image/png/jpg" name="picture"> <br> <input type="number"
+					name="minBid" placeholder="Minimum bid" required /> <input
+					type="datetime" placeholder="Expiry time" name="expiryTime"
+					required><br>
+				<p id="sellForm_message"></p>
 
-					<input id="createAuctionButton" type="submit" name="Create Auction"
-						value="Create">
-				</fieldset>
+				<input id="createAuctionButton" type="submit" name="Create Auction"
+					value="Create">
 			</form>
 		</div>
-
-		<button id="goToBuyPageButton" class="sellPage">Go to buy
-			page</button>
 
 	</div>
 
 
-
 	<div id="buyPage">
 
-		<div id="searchForm_div" class="searchForm buyPage">
+		<div id="searchForm_div" class="buyPage">
 			<form id="searchForm_form" class="searchForm" action="#">
 				<h2>Search</h2>
-				<fieldset>
-					<p>
-						<input id="user_input" type="text" placeholder="Search"
-							name="keyword" required />
-					</p>
-					<p id="searchForm_message"></p>
-					<input id="searchButton" type="submit">
-				</fieldset>
+				<input id="user_input" type="text" placeholder="Search"
+					name="keyword" required />
+				<p id="searchForm_message"></p>
+				<input id="searchButton" type="submit">
 			</form>
 		</div>
 
-		<div class="buyPage">
+		<div class="buyPage" id="search_results">
 			<p id="searchResults_message"></p>
 			<h2>Search results</h2>
-			<table id="searchResults_table" class="boxed">
+			<table id="searchResults_table">
 				<thead>
 					<tr>
 						<th>AuctionId</th>
@@ -146,10 +130,55 @@
 			</table>
 		</div>
 
-		<div class="buyPage">
+		<div id="offer_page" class="buyPage">
+			<h2>Auction details</h2>
+			<div>
+				<table id="items_table">
+					<thead>
+						<tr>
+							<th>ItemId</th>
+							<th>ItemName</th>
+							<th>Description</th>
+							<th>Image</th>
+					</thead>
+					<tbody id="items_body">
+
+					</tbody>
+				</table>
+			</div>
+
+			<div id="postOffer" class="buyPage">
+				<form id="postOffer_form" action="#">
+					<h3>Are you interested in this auction? Here you can make your
+						offer:</h3>
+					<input type="text" name="amount" placeholder="Amount" required />
+					<input id="postOffer_auction" type="hidden" name="auction">
+					<input id="postOffer_button" type="submit" value="Post Offer">
+				</form>
+			</div>
+
+			<div id="offers_div" class="buyPage">
+				<h3>Up to now, the following offers have been received:</h3>
+				<table id="offers_table">
+					<thead>
+						<tr>
+							<th>OfferId</th>
+							<th>BidderId</th>
+							<th>Amount</th>
+							<th>OfferDateTime</th>
+						</tr>
+					</thead>
+					<tbody id="offers_body">
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+
+		<div class="buyPage" id="winning_offers">
 			<h2>Winning offers</h2>
 			<p id="winningOffers_message"></p>
-			<table id="winningOffers_table" class="boxed">
+			<table id="winningOffers_table">
 				<thead>
 					<tr>
 						<th>OfferId</th>
@@ -165,10 +194,10 @@
 			</table>
 		</div>
 
-		<div class="buyPage">
+		<div class="buyPage" id="visited_auctions">
 			<h2>Recently seen</h2>
 			<p id="visitedAuctions_message"></p>
-			<table id="visitedAuctions_table" class="boxed">
+			<table id="visitedAuctions_table">
 				<thead>
 					<tr>
 						<th>AuctionId</th>
@@ -180,54 +209,6 @@
 				</tbody>
 			</table>
 		</div>
-	</div>
-
-	<div id="offer_page" class="buyPage">
-		<h2>Auction details</h2>
-		<div>
-			<table id="items_table">
-				<thead>
-					<tr>
-						<th>ItemId</th>
-						<th>ItemName</th>
-						<th>Description</th>
-						<th>Image</th>
-				</thead>
-				<tbody id="items_body">
-
-				</tbody>
-			</table>
-		</div>
-
-
-		<div class="postOffer" class="buyPage">
-			<form id="postOffer_form" action="#">
-				<h2>Are you interested in this auction? Here you can make your
-					offer:</h2>
-				<input type="text" name="amount" placeholder="Amount" required /> <input
-					id="postOffer_auction" type="hidden" name="auction"> <input
-					id="postOffer_button" type="submit" value="Post Offer">
-			</form>
-		</div>
-
-		<div id="offers_div" class="buyPage">
-			<h2>Up to now, the following offers have been received:</h2>
-			<table id="offers_table">
-				<thead>
-					<tr>
-						<th>OfferId</th>
-						<th>BidderId</th>
-						<th>Amount</th>
-						<th>OfferDateTime</th>
-					</tr>
-				</thead>
-				<tbody id="offers_body">
-				</tbody>
-			</table>
-		</div>
-
-		<button id="goToSellPageButton" class="buyPage">Go to sell
-			page</button>
 
 	</div>
 

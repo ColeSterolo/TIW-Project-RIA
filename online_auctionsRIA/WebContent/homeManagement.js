@@ -4,7 +4,7 @@
 
 	var pageOrchestrator = new PageOrchestrator();
 	var openAuctions, closedAuctions, auctionForm;
-	var searchAuctions, offersDetails, visitedAuctions;
+	var searchAuctions, offersDetails, visitedAuctions, winningOffers;
 	var sellPage;
 
 	document.getElementById("goToBuyPageButton").addEventListener('click', (e) => {
@@ -45,6 +45,7 @@
 		searchAuctions = new SearchAuctions();
 		offersDetails = new OffersDetails();
 		visitedAuctions = new VisitedAuctions();
+		winningOffers = new WinningOffers();
 
 		this.start = function(mode) {
 			console.log("orchestrator started");
@@ -63,15 +64,17 @@
 
 			}
 			else if (mode == 2) {
+				sellPage.hide();
+				buyPage.show();
 
 				searchAuctions.activateSearch();
+				searchAuctions.update();
 
-				offersDetails.hide();
+				offersDetails.update();
 
 				visitedAuctions.update();
+				winningOffers.show();
 
-				buyPage.show();
-				sellPage.hide();
 			}
 		}
 
@@ -330,9 +333,15 @@
 		this.hide = function() {
 			document.getElementById("openAuctionDetails_div").style.diplay = "none";
 		}
+<<<<<<< HEAD
 		
 		this.clear = function(){
 			document.getElementById("openAuctionDetails_body").innerHTML = "";
+=======
+
+		this.clear = function() {
+			document.getElementById("openAuctionDetails_div").innerHTML = "";
+>>>>>>> branch 'master' of https://github.com/ColeSterolo/TIW-Project-RIA
 			document.getElementById("closedAuctionDetails").innerHTML = "";
 		}
 
@@ -506,14 +515,90 @@
 		}
 	}
 
+	function WinningOffers() {
+		var self = this;
+
+		this.show = function() {
+			makeCall("GET", "GetWinningOffers", null,
+				function(req) {
+					if (req.readyState == XMLHttpRequest.DONE) {
+						var message = req.responseText;
+						switch (req.status) {
+							case 200:
+								self.update(JSON.parse(req.responseText));
+								break;
+							case 400: // bad request
+								document.getElementById("errormessage").textContent = message;
+								break;
+							case 401: // unauthorized
+								document.getElementById("errormessage").textContent = message;
+								break;
+							case 500: // server error
+								document.getElementById("errormessage").textContent = message;
+								break;
+						}
+					}
+				}
+			);
+		}
+
+		this.update = function(winningOffers) {
+			document.getElementById("winningOffers_body").innerHTML = "";
+			if (winningOffers != null) {
+				winningOffers.forEach(function(winningOffer) {
+					row = document.createElement("tr");
+
+					// write offer id
+					cell = document.createElement("td");
+					cell.innerHTML = winningOffer.offer.offerId;
+					row.appendChild(cell);
+
+					// write final amount
+					cell = document.createElement("td");
+					cell.innerHTML = winningOffer.offer.amount;
+					row.appendChild(cell);
+
+					// write auction id
+					cell = document.createElement("td");
+					cell.innerHTML = winningOffer.offer.auction;
+					row.appendChild(cell);
+
+					// write item name
+					cell = document.createElement("td");
+					cell.innerHTML = winningOffer.item.name;
+					row.appendChild(cell);
+
+					// write item description
+					cell = document.createElement("td");
+					cell.innerHTML = winningOffer.item.description;
+					row.appendChild(cell);
+
+					// print image
+					cell = document.createElement("td");
+					var image = new Image();
+					image.src = 'data:image/jpg;base64,' + winningOffer.item.image;
+					image.setAttribute("width", "200");
+					cell.appendChild(image);
+					row.appendChild(cell);
+
+					document.getElementById("winningOffers_body").appendChild(row);
+					document.getElementById("winning_offers").style.display = "block";
+				})
+
+			} else {
+				document.getElementById("winning_offers").style.display = "none";
+			}
+		}
+
+	}
+
 	function SearchAuctions() {
+		var form = document.getElementById("searchForm_form");
+		var self = this;
 
 		this.activateSearch = function() {
 			document.getElementById("searchButton").addEventListener('click', (e) => {
 				e.preventDefault();
-				var form = document.getElementById("searchForm_form");
-				var self = this;
-				document.getElementById("searchResults_body").innerHTML = "";
 
 				if (form.checkValidity()) {
 					makeCall("GET", 'Search?keyword=' + document.getElementById('user_input').value, null,
@@ -541,11 +626,11 @@
 					form.reportValidity();
 				}
 			});
-
 		}
 
 		this.update = function(searchResults) {
 			var row, cell, anchor, anchorText;
+			document.getElementById("searchResults_body").innerHTML = "";
 			if (searchResults != null) {
 				searchResults.forEach(function(auction) {
 					row = document.createElement("tr");
@@ -574,13 +659,11 @@
 					row.appendChild(cell);
 
 					document.getElementById("searchResults_body").appendChild(row);
-					document.getElementById("searchResults_table").style.visibility = "visible";
+					document.getElementById("search_results").style.display = "block";
 				})
 
 			} else {
-				console.log("No auctions found")
-				document.getElementById("searchResults_table").style.visibility = "hidden";
-				document.getElementById("searchResults_message").innerHTML = "No auctions found";
+				document.getElementById("search_results").style.display = "none";
 			}
 		}
 
@@ -601,7 +684,7 @@
 							self.updateItems(response[0]);
 							self.updateOffers(response[1]);
 							self.activateOfferForm(auctionId);
-							document.getElementById("offer_page").display = "block";
+							document.getElementById("offer_page").style.display = "block";
 						}
 					}
 				}
@@ -610,7 +693,11 @@
 		}
 
 		this.update = function() {
-			self.show(auction);
+			if (auction != null) {
+				self.show(auction);
+			} else {
+				this.hide();
+			}
 		}
 
 		this.activateOfferForm = function(auctionId) {
@@ -702,6 +789,8 @@
 
 				document.getElementById("offers_body").appendChild(row);
 			})
+
+
 		}
 
 		this.hide = function() {
@@ -715,9 +804,6 @@
 
 		this.update = function() {
 			ids = getVisitedAuctions();
-			parameter = {
-				auctionIds: ids
-			}
 			if (ids.length > 0) {
 				makeJsonPostCall("GetAuctionsById", "auctionIds", ids,
 					function(req) {
@@ -730,6 +816,8 @@
 						}
 					}
 				);
+			} else {
+				self.hide();
 			}
 		}
 
@@ -764,14 +852,20 @@
 					row.appendChild(cell);
 
 					document.getElementById("visitedAuctions_body").appendChild(row);
-					document.getElementById("visitedAuctions_table").style.visibility = "visible";
+					document.getElementById("visited_auctions").style.display = "block";
 				})
 
 			} else {
-				console.log("No auctions found")
-				document.getElementById("visitedAuctions_table").style.visibility = "hidden";
+				self.hide();
 			}
+
 		}
+
+		this.hide = function() {
+			document.getElementById("visited_auctions").style.display = "none";
+		}
+
+
 	}
 
 }());
