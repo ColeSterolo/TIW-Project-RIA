@@ -108,7 +108,12 @@ function getVisitedAuctions() {
 	return ids;
 }
 
-function addVisitedAuction(id) {
+function addVisitedAuction(auctionId) {
+	/*
 	var auction = "Auction" + id;
 	setCookie(auction, id, 30);
+	*/
+	var user = sessionStorage.getItem("username").replace(/(\r\n|\n|\r)/gm, "");
+	var auction = user + auctionId;
+	setCookie(auction, auctionId);
 }
