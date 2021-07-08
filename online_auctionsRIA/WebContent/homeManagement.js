@@ -48,7 +48,6 @@
 		winningOffers = new WinningOffers();
 
 		this.start = function(mode) {
-			console.log("orchestrator started");
 
 			if (mode == 1) { //temporary, to be changed
 
@@ -224,7 +223,6 @@
 
 							});
 						} else {
-							console.log("no open auctions!!")
 							document.getElementById("openAuctions_table").style.visibility = "hidden";
 							document.getElementById("openAuctions_message").innerHTML = "You have no open auctions";
 						}
@@ -253,6 +251,9 @@
 							document.getElementById("openAuctionDetails_message").innerHTML = "";
 							document.getElementById("openAuctionDetails_body").innerHTML = "";
 							if (isOpen) {
+								if (document.getElementById("openAuctionDetails_div").style.display == "none") {
+									document.getElementById("openAuctionDetails_div").style.display = "block";
+								}
 								document.getElementById("auctionDetails_h2").innerHTML = "Auction " +
 									auction.auction.auctionId + " details: offers";
 								document.getElementById("openAuctionDetails_div").style.display = "block";
@@ -318,6 +319,7 @@
 								} else {
 									document.getElementById("closedAuctionDetails").innerHTML = "This auction had no offers";
 								}
+								document.getElementById("closedAuctionDetails").style.display = "block";
 							}
 
 
@@ -331,10 +333,13 @@
 		}
 
 		this.hide = function() {
-			document.getElementById("openAuctionDetails_div").style.diplay = "none";
+			document.getElementById("openAuctionDetails_div").style.display = "none";
+			document.getElementById("openAuctionDetails_table").style.display = "none";
 		}
 
 		this.clear = function() {
+			document.getElementById("auctionDetails_h2").innerHTML = "";
+			document.getElementById("openAuctionDetails_message").innerHTML = "";
 			document.getElementById("openAuctionDetails_body").innerHTML = "";
 			document.getElementById("closedAuctionDetails").innerHTML = "";
 		}
@@ -381,16 +386,13 @@
 					if (req.readyState == 4) {
 						var message = req.responseText;
 						if (req.status == 200) {
-							console.log("succesful search\n");
-							auctionList = JSON.parse(req.responseText);
-							//console.log("number of auctions: " + auctionList.length);
+							auctionList = JSON.parse(req.responseText);;
 						} else {
-							//document.getElementById("openAuctions_message").textContent = message;
+							document.getElementById("openAuctions_message").textContent = message;
 							auctionList = null;
 						}
 
 						if (auctionList != null && auctionList.length > 0) {
-							//console.log("open auctions != null");
 							auctionList.forEach(function(auction) {
 
 								var row = document.createElement("tr");
@@ -452,7 +454,6 @@
 							});
 
 						} else {
-							console.log("no closed auctions!!")
 							document.getElementById("closedAuctions_table").style.visibility = "hidden";
 							document.getElementById("openAuctions_message").innerHTML = "You have no closed auctions";
 						}

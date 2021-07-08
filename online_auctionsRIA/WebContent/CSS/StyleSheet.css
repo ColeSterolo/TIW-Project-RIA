@@ -18,6 +18,10 @@ body {
 	width: 100%;
 }
 
+p.white{
+	color: #F1F1F1;
+}
+
 .page-title {
 	color: #e1ae57;
 	font-size: max(3vw, 20px);
