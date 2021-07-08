@@ -54,6 +54,10 @@ p.white{
 	margin: 2%;
 }
 
+.sellPage p  {
+	color: white;
+}
+
 .buyPage a, .buyPage h3 {
 	margin: 2%;
 	color: burlywood;
@@ -124,10 +128,6 @@ table th {
 table caption {
 	color: #e1ae57;
 	padding: 5%;
-}
-
-table a {
-	color: white;
 }
 
 @media screen and (max-width: 700px) {
