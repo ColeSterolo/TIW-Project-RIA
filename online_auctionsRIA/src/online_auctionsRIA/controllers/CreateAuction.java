@@ -15,6 +15,7 @@ import java.time.temporal.TemporalAccessor;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,7 @@ import online_auctionsRIA.exceptions.NotUniqueNameException;
 import online_auctionsRIA.utils.ConnectionHandler;
 import online_auctionsRIA.utils.ImageUtils;
 
+@MultipartConfig
 @WebServlet("/CreateAuction")
 public class CreateAuction extends HttpServlet{
 	
@@ -73,25 +75,23 @@ public class CreateAuction extends HttpServlet{
 		
 		try {
 		name = request.getParameter("itemName");
+		
 		description = request.getParameter("description");
+		
+		image = request.getPart("picture");
 		
 		price =  Integer.parseInt(request.getParameter("initialPrice"));
 		
 		minBid =  Integer.parseInt(request.getParameter("minBid"));
+		
 		dateString = StringEscapeUtils.escapeJava(request.getParameter("expiryTime"));
 	
-		
-		
-		image = request.getPart("picture");
-		
 		}catch(Exception e) {
+			
+			e.printStackTrace();
 			
 			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
 			response.getWriter().println("Error in the retrieval of form fields");
-			
-			//for debugging
-			e.printStackTrace();
-			
 			return;
 		}
 		
