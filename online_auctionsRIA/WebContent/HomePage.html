@@ -82,13 +82,10 @@
 				<input type="text" name="itemName" placeholder="Item name" required />
 				<input type="text" placeholder="Item description" name="description" />
 				<input type="number" placeholder="Initial price" name="initialPrice"
-					required /> <br> 
-				<input type="file" placeholder="Item image"
-					accept="image/png/jpg" name="picture"> <br> 
-				<input type="number"
-					name="minBid" placeholder="Minimum bid" required /> 
-				<input	
-					type="datetime" placeholder="Expiry time" name="expiryTime"
+					required /> <br> <input type="file" placeholder="Item image"
+					accept="image/png/jpg" name="picture"> <br> <input
+					type="number" name="minBid" placeholder="Minimum bid" required />
+				<input type="datetime" placeholder="Expiry time" name="expiryTime"
 					required><br>
 				<p id="sellForm_message"></p>
 
@@ -174,7 +171,22 @@
 			</div>
 
 		</div>
-		<p id="offerPage_error_message"></p>
+		<p class="centered-message buyPage" id="offerPage_error_message"></p>
+
+		<div class="buyPage" id="visited_auctions">
+			<h2>Recently seen</h2>
+			<table id="visitedAuctions_table">
+				<thead>
+					<tr>
+						<th>AuctionId</th>
+						<th>EndingTime</th>
+						<th>RemainingTime</th>
+					</tr>
+				</thead>
+				<tbody id="visitedAuctions_body">
+				</tbody>
+			</table>
+		</div>
 
 		<div class="buyPage" id="winning_offers">
 			<h2>Winning offers</h2>
@@ -193,23 +205,8 @@
 				</tbody>
 			</table>
 		</div>
-		<p id="winningOffers_error_message"></p>
-		
+		<p class="centered-message buyPage" id="winningOffers_error_message"></p>
 
-		<div class="buyPage" id="visited_auctions">
-			<h2>Recently seen</h2>
-			<table id="visitedAuctions_table">
-				<thead>
-					<tr>
-						<th>AuctionId</th>
-						<th>EndingTime</th>
-						<th>RemainingTime</th>
-					</tr>
-				</thead>
-				<tbody id="visitedAuctions_body">
-				</tbody>
-			</table>
-		</div>
 
 	</div>
 

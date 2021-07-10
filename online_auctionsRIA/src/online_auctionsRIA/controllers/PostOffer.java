@@ -89,7 +89,8 @@ public class PostOffer extends HttpServlet {
 			resp.getWriter().println("Error verifying the validity of the new offer into the DB");
 			return;
 		} catch (NumberFormatException nfe) {
-			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid numeric input");
+			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			resp.getWriter().println("Invalid non-numeric input");
 			return;
 		}		
 		

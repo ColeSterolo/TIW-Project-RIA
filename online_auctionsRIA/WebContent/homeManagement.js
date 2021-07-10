@@ -1,5 +1,3 @@
-
-
 (function() {
 
 	var pageOrchestrator = new PageOrchestrator();
@@ -9,11 +7,15 @@
 
 	document.getElementById("goToBuyPageButton").addEventListener('click', (e) => {
 		e.preventDefault();
+		document.getElementById("winningOffers_error_message").innerHTML = "";
+		document.getElementById("postOffer_form_message").innerHTML = "";
+		document.getElementById("searchForm_message").innerHTML = "";
 		pageOrchestrator.start(2);
 	});
 
 	document.getElementById("goToSellPageButton").addEventListener('click', (e) => {
 		e.preventDefault();
+		document.getElementById("sellForm_message").innerHTML = "";
 		pageOrchestrator.start(1);
 	});
 
@@ -511,13 +513,13 @@
 								self.update(JSON.parse(req.responseText));
 								break;
 							case 400: // bad request
-								document.getElementById("errormessage").textContent = message;
+								document.getElementById("winningOffers_error_message").textContent = message;
 								break;
 							case 401: // unauthorized
-								document.getElementById("errormessage").textContent = message;
+								document.getElementById("winningOffers_error_message").textContent = message;
 								break;
 							case 500: // server error
-								document.getElementById("errormessage").textContent = message;
+								document.getElementById("winningOffers_error_message").textContent = message;
 								break;
 						}
 					}
@@ -528,6 +530,7 @@
 		this.update = function(winningOffers) {
 			document.getElementById("winningOffers_body").innerHTML = "";
 			if (winningOffers != null) {
+				document.getElementById("winningOffers_error_message").style.display = "none";
 				winningOffers.forEach(function(winningOffer) {
 					row = document.createElement("tr");
 
@@ -581,13 +584,13 @@
 		var self = this;
 
 		this.activateSearch = function() {
+			var rowCount = document.getElementById("searchResults_body").rows.length;
+			if (rowCount == 0) {
+				document.getElementById("search_results").style.display = "none";
+			}
+
 			document.getElementById("searchButton").addEventListener('click', (e) => {
 				e.preventDefault();
-				var rows = document.getElementById("searchResults_table").getElementsByTagName('tr');
-				var rowCount = rows.length;
-				if (rowCount == 0) {
-					document.getElementById("search_results").style.display = "none";
-				}
 
 				if (form.checkValidity()) {
 					makeCall("GET", 'Search?keyword=' + document.getElementById('user_input').value, null,
@@ -617,6 +620,7 @@
 		this.update = function(searchResults) {
 			var row, cell, anchor, anchorText;
 			document.getElementById("searchResults_body").innerHTML = "";
+			document.getElementById("searchForm_message").innerHTML = "";
 			if (searchResults.length > 0) {
 				searchResults.forEach(function(auction) {
 					row = document.createElement("tr");
@@ -650,6 +654,7 @@
 
 			} else {
 				document.getElementById("searchForm_message").textContent = "No results were found";
+				document.getElementById("search_results").style.display = "none";
 			}
 		}
 
@@ -672,19 +677,20 @@
 								self.updateOffers(response[1]);
 								self.activateOfferForm(auctionId);
 								document.getElementById("offer_page").style.display = "block";
+								document.getElementById("offerPage_error_message").style.display = "none";
 								break;
 							case 400:
 								document.getElementById("offerPage_error_message").textContent = message;
+								document.getElementById("offerPage_error_message").style.display = "block";
 								break;
 							case 404:
 								document.getElementById("offerPage_error_message").textContent = message;
+								document.getElementById("offerPage_error_message").style.display = "block";
 								break;
 							case 502:
 								document.getElementById("offerPage_error_message").textContent = message;
+								document.getElementById("offerPage_error_message").style.display = "block";
 								break;
-						}
-						if (req.status == 200) {
-
 						}
 					}
 				}
@@ -716,12 +722,15 @@
 										break;
 									case 400: // bad request
 										document.getElementById("postOffer_form_message").textContent = message;
+										document.getElementById("postOffer_form_message").style.display = "block";
 										break;
 									case 403: // forbidden
 										document.getElementById("postOffer_form_message").textContent = message;
+										document.getElementById("postOffer_form_message").style.display = "block";
 										break;
 									case 500: // server error
 										document.getElementById("postOffer_form_message").textContent = message;
+										document.getElementById("postOffer_form_message").style.display = "block";
 										break;
 								}
 							}
@@ -800,6 +809,8 @@
 
 		this.hide = function() {
 			document.getElementById("offer_page").style.display = "none";
+			document.getElementById("postOffer_form_message").style.display = "none";
+			document.getElementById("offerPage_error_message").style.display = "none";
 		}
 
 	}

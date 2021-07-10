@@ -54,7 +54,7 @@ p.white{
 	margin: 2%;
 }
 
-.sellPage p  {
+p  {
 	color: white;
 }
 
@@ -104,6 +104,7 @@ p.white{
 	border-radius: 10px;
 	text-align: center;
 	padding: 2%;
+	margin: 2%;
 }
 
 .centered-message span {
