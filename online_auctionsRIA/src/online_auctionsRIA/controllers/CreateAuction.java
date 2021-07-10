@@ -15,6 +15,7 @@ import java.time.temporal.TemporalAccessor;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -73,17 +74,17 @@ public class CreateAuction extends HttpServlet{
 		
 		try {
 		name = request.getParameter("itemName");
+		
 		description = request.getParameter("description");
+		
+		image = request.getPart("picture");
 		
 		price =  Integer.parseInt(request.getParameter("initialPrice"));
 		
 		minBid =  Integer.parseInt(request.getParameter("minBid"));
+		
 		dateString = StringEscapeUtils.escapeJava(request.getParameter("expiryTime"));
 	
-		
-		
-		image = request.getPart("picture");
-		
 		} catch(Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
 			response.getWriter().println("Error in the retrieval of form fields");
@@ -160,9 +161,6 @@ public class CreateAuction extends HttpServlet{
 				} catch (SQLException e) {
 					response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
 					response.getWriter().println("Error in the database insertion");
-					
-					//for debugging
-					e.printStackTrace();
 					return;
 				}catch(NotUniqueNameException e) {
 					response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

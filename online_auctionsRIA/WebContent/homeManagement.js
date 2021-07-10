@@ -49,7 +49,7 @@
 
 		this.start = function(mode) {
 
-			if (mode == 1) { //temporary, to be changed
+			if (mode == 1) {
 
 				openAuctions.update();
 				closedAuctions.update();
@@ -76,25 +76,6 @@
 			}
 		}
 
-		/*		this.refresh = function(mode) {
-					if (mode == 1) {
-		
-						openAuctions.update();
-						closedAuctions.update();
-						auctionForm.activateForm();
-		
-						sellPage.show();
-						buyPage.hide();
-		
-					} else {
-		
-						searchAuctions.activateSearch();
-						offersDetails.hide();
-		
-						buyPage.show();
-						sellPage.hide();
-					}
-				}*/
 	}
 
 
@@ -114,6 +95,7 @@
 			for (i = 0; i < divs.length; i++) {
 				divs[i].style.display = "block";
 			}
+			document.getElementById("openAuctionDetails_div").style.display = "none";
 		}
 
 	}
@@ -451,11 +433,15 @@
 								row.appendChild(cell);
 
 								document.getElementById("closedAuctions_body").appendChild(row);
+
+								document.getElementById("closedAuctions_tr").style.display = "block";
+								document.getElementById("closedAuctions_table").style.display = "block";
 							});
 
 						} else {
-							document.getElementById("closedAuctions_table").style.visibility = "hidden";
-							document.getElementById("openAuctions_message").innerHTML = "You have no closed auctions";
+							document.getElementById("closedAuctions_tr").style.display = "none";
+							document.getElementById("closedAuctions_table").style.display = "none";
+							document.getElementById("closedAuctions_message").innerHTML = "You have no closed auctions";
 						}
 					}
 				});
@@ -473,7 +459,7 @@
 
 			var message = document.getElementById("sellForm_message");
 
-			document.getElementById("createAuctionButton").addEventListener('click', () => {
+			document.getElementById("createAuctionButton").addEventListener('click', (e) => {
 				e.preventDefault();
 				var form = document.getElementById("sellForm_form");
 				if (form.checkValidity()) {
@@ -487,14 +473,16 @@
 										message.innerHTML = "Auction created succesfully";
 										break;
 									case 400: // bad request
-										document.getElementById("errormessage").textContent = message;
+										document.getElementById("sellForm_message").textContent = message;
 										break;
 									case 401: // unauthorized
-										document.getElementById("errormessage").textContent = message;
+										document.getElementById("sellForm_message").textContent = message;
 										break;
 									case 500: // server error
-										document.getElementById("errormessage").textContent = message;
+										document.getElementById("sellForm_message").textContent = message;
 										break;
+									case 502:
+										document.getElementById("sellForm_message").textContent = message;
 								}
 							}
 						}
