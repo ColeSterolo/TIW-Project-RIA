@@ -56,16 +56,26 @@ public class ShowOffers extends HttpServlet {
 		try {
 			items = itemDAO.getItems(Integer.parseInt(reqAuction));
 		} catch (SQLException e) {
-			e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error retrieving the item from DB");
+			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+			response.getWriter().println("Error retrieving the item from DB");	
+			return;
+		} catch (NumberFormatException nfe) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Invalid non-numeric input");
+			return;
+		}
+		
+		if (items == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			response.getWriter().println("No auction with such id");
 			return;
 		}
 		
 		try {
 			offers = offerDAO.getOffers(Integer.parseInt(reqAuction));
 		} catch (SQLException e) {
-			e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error retrieving the offers from DB");
+			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+			response.getWriter().println("Error retrieving the offers from DB");
 			return;
 		}
 		

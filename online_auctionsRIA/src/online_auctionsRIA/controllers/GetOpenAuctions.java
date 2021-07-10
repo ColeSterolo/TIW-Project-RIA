@@ -10,7 +10,6 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -63,10 +62,6 @@ public class GetOpenAuctions extends HttpServlet{
 		try {
 			openAuctions = auctionDAO.getOpenAuctionsJoinItem(user);
 		}catch(SQLException e) {
-			
-			//for debugging
-			e.printStackTrace();
-			
 			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
 			response.getWriter().println("Error in the retrieval of open auctions");
 			return;
@@ -106,7 +101,7 @@ public class GetOpenAuctions extends HttpServlet{
 				
 				Offer maxOffer = null;
 				try {
-					maxOffer = offerDAO.getAuctionMaxOffer(a.getAuction().getAuctionId());
+					maxOffer = offerDAO.getMaxOffer(a.getAuction().getAuctionId());
 				} catch (SQLException e) {
 										
 					response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);

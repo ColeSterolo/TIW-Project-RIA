@@ -109,7 +109,7 @@
 			</form>
 		</div>
 
-		<div class="buyPage" id="search_results">
+		<div id="search_results" class="buyPage">
 			<p id="searchResults_message"></p>
 			<h2>Search results</h2>
 			<table id="searchResults_table">
@@ -148,12 +148,14 @@
 						offer:</h3>
 					<input type="text" name="amount" placeholder="Amount" required />
 					<input id="postOffer_auction" type="hidden" name="auction">
+					<p id="postOffer_form_message"></p>
 					<input id="postOffer_button" type="submit" value="Post Offer">
 				</form>
 			</div>
 
 			<div id="offers_div" class="buyPage">
 				<h3>Up to now, the following offers have been received:</h3>
+				<p id="offers_message"></p>
 				<table id="offers_table">
 					<thead>
 						<tr>
@@ -169,10 +171,10 @@
 			</div>
 
 		</div>
+		<p id="offerPage_error_message"></p>
 
 		<div class="buyPage" id="winning_offers">
 			<h2>Winning offers</h2>
-			<p id="winningOffers_message"></p>
 			<table id="winningOffers_table">
 				<thead>
 					<tr>
@@ -188,10 +190,11 @@
 				</tbody>
 			</table>
 		</div>
+		<p id="winningOffers_error_message"></p>
+		
 
 		<div class="buyPage" id="visited_auctions">
 			<h2>Recently seen</h2>
-			<p id="visitedAuctions_message"></p>
 			<table id="visitedAuctions_table">
 				<thead>
 					<tr>

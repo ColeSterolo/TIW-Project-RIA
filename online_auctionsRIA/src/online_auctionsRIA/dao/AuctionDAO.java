@@ -177,12 +177,8 @@ public class AuctionDAO {
 		con.setAutoCommit(false);
 
 		try (PreparedStatement pstatement = con.prepareStatement(query);) {
-			//first query
 			pstatement.setInt(1, auctionId);
 			pstatement.executeUpdate();
-			//second query
-			//offerDAO.setWinningFlag(auctionId);
-			//if no exceptions occur, then commit
 			con.commit();
 		} catch (SQLException e) {
 			con.rollback();

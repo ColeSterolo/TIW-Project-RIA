@@ -67,7 +67,6 @@
 				buyPage.show();
 
 				searchAuctions.activateSearch();
-				searchAuctions.update();
 
 				offersDetails.update();
 
@@ -583,6 +582,7 @@
 
 			} else {
 				document.getElementById("winning_offers").style.display = "none";
+				document.getElementById("winningOffers_error_message").textContent = "No winning offers so far";
 			}
 		}
 
@@ -595,6 +595,11 @@
 		this.activateSearch = function() {
 			document.getElementById("searchButton").addEventListener('click', (e) => {
 				e.preventDefault();
+				var rows = document.getElementById("searchResults_table").getElementsByTagName('tr');
+				var rowCount = rows.length;
+				if (rowCount == 0) {
+					document.getElementById("search_results").style.display = "none";
+				}
 
 				if (form.checkValidity()) {
 					makeCall("GET", 'Search?keyword=' + document.getElementById('user_input').value, null,
@@ -606,13 +611,10 @@
 										self.update(JSON.parse(req.responseText));
 										break;
 									case 400: // bad request
-										document.getElementById("errormessage").textContent = message;
-										break;
-									case 401: // unauthorized
-										document.getElementById("errormessage").textContent = message;
+										document.getElementById("searchForm_message").textContent = message;
 										break;
 									case 500: // server error
-										document.getElementById("errormessage").textContent = message;
+										document.getElementById("searchForm_message").textContent = message;
 										break;
 								}
 							}
@@ -627,7 +629,7 @@
 		this.update = function(searchResults) {
 			var row, cell, anchor, anchorText;
 			document.getElementById("searchResults_body").innerHTML = "";
-			if (searchResults != null) {
+			if (searchResults.length > 0) {
 				searchResults.forEach(function(auction) {
 					row = document.createElement("tr");
 					// write auction id link
@@ -659,7 +661,7 @@
 				})
 
 			} else {
-				document.getElementById("search_results").style.display = "none";
+				document.getElementById("searchForm_message").textContent = "No results were found";
 			}
 		}
 
@@ -675,12 +677,26 @@
 				function(req) {
 					if (req.readyState == 4) {
 						var message = req.responseText;
+						switch (req.status) {
+							case 200:
+								var response = JSON.parse(message);
+								self.updateItems(response[0]);
+								self.updateOffers(response[1]);
+								self.activateOfferForm(auctionId);
+								document.getElementById("offer_page").style.display = "block";
+								break;
+							case 400:
+								document.getElementById("offerPage_error_message").textContent = message;
+								break;
+							case 404:
+								document.getElementById("offerPage_error_message").textContent = message;
+								break;
+							case 502:
+								document.getElementById("offerPage_error_message").textContent = message;
+								break;
+						}
 						if (req.status == 200) {
-							var response = JSON.parse(message);
-							self.updateItems(response[0]);
-							self.updateOffers(response[1]);
-							self.activateOfferForm(auctionId);
-							document.getElementById("offer_page").style.display = "block";
+
 						}
 					}
 				}
@@ -711,13 +727,13 @@
 										self.update();
 										break;
 									case 400: // bad request
-										document.getElementById("errormessage").textContent = message;
+										document.getElementById("postOffer_form_message").textContent = message;
 										break;
-									case 401: // unauthorized
-										document.getElementById("errormessage").textContent = message;
+									case 403: // forbidden
+										document.getElementById("postOffer_form_message").textContent = message;
 										break;
 									case 500: // server error
-										document.getElementById("errormessage").textContent = message;
+										document.getElementById("postOffer_form_message").textContent = message;
 										break;
 								}
 							}
@@ -761,30 +777,35 @@
 		this.updateOffers = function(offers) {
 			document.getElementById("offers_body").innerHTML = "";
 
-			//show offers
-			offers.forEach(function(offer) {
-				row = document.createElement("tr");
-				// write auction ending time
-				cell = document.createElement("td");
-				cell.innerHTML = offer.offerId;
-				row.appendChild(cell);
-				// 
-				cell = document.createElement("td");
-				cell.innerHTML = offer.bidder;
-				row.appendChild(cell);
-				//
-				cell = document.createElement("td");
-				cell.innerHTML = offer.amount;
-				row.appendChild(cell);
-				//
-				cell = document.createElement("td");
-				offerTime = moment.utc(offer.datetime.seconds * 1000);
-				formattedOfferTime = offerTime.format('YYYY/MM/DD HH:mm');
-				cell.innerHTML = formattedOfferTime;
-				row.appendChild(cell);
+			if (offers.length > 0) {
+				//show offers
+				offers.forEach(function(offer) {
+					row = document.createElement("tr");
+					// write auction ending time
+					cell = document.createElement("td");
+					cell.innerHTML = offer.offerId;
+					row.appendChild(cell);
+					// 
+					cell = document.createElement("td");
+					cell.innerHTML = offer.bidder;
+					row.appendChild(cell);
+					//
+					cell = document.createElement("td");
+					cell.innerHTML = offer.amount;
+					row.appendChild(cell);
+					//
+					cell = document.createElement("td");
+					offerTime = moment.utc(offer.datetime.seconds * 1000);
+					formattedOfferTime = offerTime.format('YYYY/MM/DD HH:mm');
+					cell.innerHTML = formattedOfferTime;
+					row.appendChild(cell);
 
-				document.getElementById("offers_body").appendChild(row);
-			})
+					document.getElementById("offers_body").appendChild(row);
+				})
+
+			} else {
+				document.getElementById("postOffer_form_message").textContent = "No offers for this auction yet";
+			}
 
 
 		}

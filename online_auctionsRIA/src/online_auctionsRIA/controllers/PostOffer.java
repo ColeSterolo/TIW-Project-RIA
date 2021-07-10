@@ -53,45 +53,45 @@ public class PostOffer extends HttpServlet {
 		
 		if (user.getUsername() == null || auctionStr == null || amountStr == null || 
 				user.getUsername().isEmpty() || auctionStr.isEmpty() || amountStr.isEmpty()) {
-			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing value");
+			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			resp.getWriter().println("Missing value");
 			return;
 		}
 		
-		auction = Integer.parseInt(auctionStr);
-		amount = Integer.parseInt(amountStr);
-		OfferDAO offerDAO = new OfferDAO(connection);
-		AuctionDAO auctionDAO = new AuctionDAO(connection);
-		
 		
 		try {
+			auction = Integer.parseInt(auctionStr);
+			amount = Integer.parseInt(amountStr);
+			OfferDAO offerDAO = new OfferDAO(connection);
+			AuctionDAO auctionDAO = new AuctionDAO(connection);
 			if(auctionDAO.isExpired(auction)) {
-				resp.sendError(HttpServletResponse.SC_FORBIDDEN, 
-						"This auction is expired");
+				resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				resp.getWriter().println("This auction is expired");
 				return;
 			}
-			maxOffer = offerDAO.getMaxOffer(auction);
+			maxOffer = offerDAO.getMaxOffer(auction).getAmount();
 			minBid = auctionDAO.getMinBid(auction);
 			if(amount - maxOffer < minBid) {
-				resp.sendError(HttpServletResponse.SC_FORBIDDEN,
-						"This offer is too low: the next offer needs to be at least " + (maxOffer + minBid));
+				resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				resp.getWriter().println("This offer is too low: the next offer "
+						+ "needs to be at least " + (maxOffer + minBid));
+				return;
+			}
+			try {
+				offerDAO.insertOffer(amount, auction, user.getUserId());
+			} catch (SQLException e) {
+				resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				resp.getWriter().println("Error inserting the new offer into the DB");
 				return;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-					"Error verifying the validity of the new offer into the DB");
+			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			resp.getWriter().println("Error verifying the validity of the new offer into the DB");
+			return;
+		} catch (NumberFormatException nfe) {
+			resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid numeric input");
 			return;
 		}		
-				
-		
-		try {
-			offerDAO.insertOffer(amount, auction, user.getUserId());
-		} catch (SQLException e) {
-			e.printStackTrace();
-			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-					"Error inserting the new offer into the DB");
-			return;
-		}
 		
 		resp.setStatus(HttpServletResponse.SC_OK);
 

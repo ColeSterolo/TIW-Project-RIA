@@ -2,12 +2,9 @@ package online_auctionsRIA.dao;
 
 
 import java.sql.*;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
-
 
 import online_auctionsRIA.beans.*;
 import online_auctionsRIA.utils.OfferItem;
@@ -26,7 +23,7 @@ public class OfferDAO {
 
 		List<Offer> offers = new ArrayList<Offer>();
 		Offer offer = null;
-		String query = "SELECT * FROM offer WHERE offer.auction = ? ORDER BY amount DESC";
+		String query = "SELECT * FROM offer WHERE offer.auction = ? ORDER BY offerTimestamp DESC";
 
 		try (PreparedStatement pstatement = con.prepareStatement(query);) {
 			pstatement.setInt(1, auction);
@@ -48,22 +45,6 @@ public class OfferDAO {
 			return offers;
 		else
 			return null;
-	}
-
-	public int getMaxOffer (int auction) throws SQLException {
-		String query = "SELECT amount FROM offer "
-				+ "WHERE auction = ? AND amount >= (SELECT max(amount) FROM offer WHERE auction = ?)";
-
-		try (PreparedStatement pstatement = con.prepareStatement(query);) {
-			pstatement.setInt(1, auction);
-			pstatement.setInt(2, auction);
-			try (ResultSet result = pstatement.executeQuery();) {
-				if (result.next()) {
-					return result.getInt("amount");
-				}
-				return 0;
-			}
-		}
 	}
 
 
@@ -103,7 +84,9 @@ public class OfferDAO {
 		OfferItem offerItem = null;
 		List<OfferItem> offers = new ArrayList<OfferItem>();
 		String query = "SELECT * FROM offer off JOIN item itm ON off.auction = itm.auction "
-				+ "WHERE bidder = ? AND winningOffer != 0 ";
+				+ "WHERE bidder = ? "
+				+ "AND off.auction IN (SELECT auctionId FROM auction WHERE closedFlag = 1) "
+				+ "AND off.amount >= (SELECT max(amount) FROM offer off2 JOIN item itm2 on off2.auction = itm2.auction WHERE off2.auction = off.auction)";
 
 		try (PreparedStatement pstatement = con.prepareStatement(query);) {
 			pstatement.setInt(1, userId);
@@ -174,38 +157,32 @@ public class OfferDAO {
 		else
 			return null;
 	}
-
-
-	public Offer getAuctionMaxOffer(int auctionId) throws SQLException {
-
+	
+	public Offer getMaxOffer (int auction) throws SQLException {
 		Offer offer = null;
-		List<Offer> offers = new ArrayList<Offer>();
+		String query = "SELECT * FROM offer "
+				+ "WHERE auction = ? AND amount >= (SELECT max(amount) FROM offer WHERE auction = ?)";
 
-		
-		String query = "SELECT * FROM offer WHERE auction = ? ORDER BY amount DESC";
 		try (PreparedStatement pstatement = con.prepareStatement(query);) {
-			pstatement.setInt(1, auctionId);
+			pstatement.setInt(1, auction);
+			pstatement.setInt(2, auction);
 			try (ResultSet result = pstatement.executeQuery();) {
-				if(result.next()) {
-					
+				if (result.next()) {
 					offer = new Offer();
 					offer.setOfferId(result.getInt("offerId"));
 					offer.setAmount(result.getInt("amount"));
 					offer.setAuction(result.getInt("auction"));
 					offer.setBidder(result.getInt("bidder"));
 					offer.setDatetime(result.getTimestamp("offerTimestamp").toInstant());
-					
 				}
+				return offer;
 			}
 		}
-		return offer;
-	}
+	}	
 	
 	public OfferJoinUser getAuctionMaxOfferJoinUser(int auctionId) throws SQLException {
 
 		OfferJoinUser offer = null;
-		List<OfferJoinUser> offers = new ArrayList<OfferJoinUser>();
-
 		
 		String query = "SELECT * FROM offer JOIN user_table ON bidder = userId WHERE auction = ? ORDER BY amount DESC";
 		try (PreparedStatement pstatement = con.prepareStatement(query);) {

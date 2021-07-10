@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -48,13 +47,17 @@ public class GetWinningOffers extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		OfferDAO offerDAO = new OfferDAO(connection);
+		
 		UserBean user = (UserBean) request.getSession().getAttribute("user");
+		
+		
 		List<OfferItem> winningOffers = new ArrayList<OfferItem>();
 		try {
 			winningOffers = offerDAO.getWinningOffers(user.getUserId());
 		} catch (SQLException e) {
-			e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Error retrieving winning offers from DB");
+			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+			response.getWriter().println("Error retrieving winning offers from DB");
+			return;
 		}
 		
 		Gson gson = new GsonBuilder().setDateFormat("yyyy MMM dd").create();

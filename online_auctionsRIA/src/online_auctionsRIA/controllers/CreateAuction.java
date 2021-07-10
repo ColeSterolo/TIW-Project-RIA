@@ -84,19 +84,14 @@ public class CreateAuction extends HttpServlet{
 		
 		image = request.getPart("picture");
 		
-		}catch(Exception e) {
-			
+		} catch(Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
 			response.getWriter().println("Error in the retrieval of form fields");
-			
-			//for debugging
-			e.printStackTrace();
-			
 			return;
 		}
 		
-		
 		try {
+			
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 
 		TemporalAccessor temporalAccessor = formatter.parse(dateString);
@@ -105,7 +100,7 @@ public class CreateAuction extends HttpServlet{
 		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
 		endingTime = Instant.from(zonedDateTime);
 		
-		}catch(Exception e) {
+		} catch(Exception e) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getWriter().println("Invalid date format");
 			return;

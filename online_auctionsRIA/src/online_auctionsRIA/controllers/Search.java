@@ -48,7 +48,7 @@ public class Search extends HttpServlet {
 
 		if (keyword == null || keyword.isEmpty()) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getWriter().println("The inserted date is not valid");
+			response.getWriter().println("No input for search");
 			return;
 		}
 
