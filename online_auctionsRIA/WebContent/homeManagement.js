@@ -19,6 +19,10 @@
 		pageOrchestrator.start(1);
 	});
 
+	document.getElementById("logoutButton").addEventListener('click', (e) => {
+		window.sessionStorage.removeItem('username');
+	});
+
 	window.addEventListener("load", () => {
 
 		if (sessionStorage.getItem("username") == null) {
@@ -79,7 +83,7 @@
 		}
 
 	}
-
+	
 
 	function SellPage() {
 
@@ -98,6 +102,7 @@
 				divs[i].style.display = "block";
 			}
 			document.getElementById("openAuctionDetails_div").style.display = "none";
+			document.getElementById("sellForm_message").innerHTML = "";
 		}
 
 	}
@@ -344,10 +349,10 @@
 								message.innerHTML = "Auction closed succesfully";
 								break;
 							case 400: // bad request
-								document.getElementById("errormessage").textContent = message;
+								document.getElementById("closedAuctions_message").textContent = message;
 								break;
 							case 502: // server error
-								document.getElementById("errormessage").textContent = message;
+								document.getElementById("closedAuctions_message").textContent = message;
 								break;
 						}
 					}
@@ -460,6 +465,7 @@
 		this.activateForm = function() {
 
 			var message = document.getElementById("sellForm_message");
+			document.getElementById("sellForm_message").innerHTML = "";
 
 			document.getElementById("createAuctionButton").addEventListener('click', (e) => {
 				e.preventDefault();

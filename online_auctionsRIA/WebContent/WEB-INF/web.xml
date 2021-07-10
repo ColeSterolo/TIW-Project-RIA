@@ -23,5 +23,28 @@
 		<param-name>dbDriver</param-name>
 		<param-value>com.mysql.cj.jdbc.Driver</param-value>
 	</context-param>
+
+	<filter>
+		<filter-name>LoginChecker</filter-name>
+		<filter-class>online_auctionsRIA.filters.LoginChecker</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>LoginChecker</filter-name>
+		<url-pattern>/CloseAuction</url-pattern>
+		<url-pattern>/CreateAuction</url-pattern>
+		<url-pattern>/CreateMission</url-pattern>
+		<url-pattern>/GetAuctionsById</url-pattern>
+		<url-pattern>/GetClosedAuctions</url-pattern>
+		<url-pattern>/GetOpenAuctions</url-pattern>
+		<url-pattern>/GetOpenAuctionDetails</url-pattern>
+		<url-pattern>/GetWinningOffers</url-pattern>
+		<url-pattern>/PostOffer</url-pattern>
+		<url-pattern>/RegisterUser</url-pattern>
+		<url-pattern>/Search</url-pattern>
+		<url-pattern>/ShowOffers</url-pattern>
+		<url-pattern>/HomePage.html</url-pattern>
+		<url-pattern>/Logout</url-pattern>
+	</filter-mapping> 
   
 </web-app>

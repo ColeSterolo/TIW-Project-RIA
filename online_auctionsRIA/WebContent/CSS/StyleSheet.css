@@ -160,12 +160,28 @@ table caption {
 	}
 }
 
-button {
+button{
 	display: inline-block;
 	margin: 1%;
 	padding: 2%;
 	background: rgba(0, 19, 31, 1);
 	border-radius: 10px;
+	color: white;
+}
+
+div.logout {
+	display: inline-block;
+	margin: 1%;
+	padding: 2%;
+	background: rgba(0, 19, 31, 1);
+	border-radius: 10px;
+	color: white;
+	position: relative;
+  	left: 1450px;
+  	bottom: 110px;
+}
+
+#logoutButton {
 	color: white;
 }
 
