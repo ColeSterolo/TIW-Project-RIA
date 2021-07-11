@@ -24,14 +24,18 @@
 	});
 
 	window.addEventListener("load", () => {
-
-		if (sessionStorage.getItem("username") == null) {
+		user = sessionStorage.getItem("username");
+		if (user == null) {
 			window.location.href = "index.html";
 		} else {
 			lastAction = getLastAction();
 			if (lastAction == "creation") {
+				// delete last action cookie
+				cookieString = user.trim() + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+				document.cookie = cookieString;
 				pageOrchestrator.start(1);
 			} else {
+				// if last action != createAuction
 				pageOrchestrator.start(2);
 			}
 
@@ -54,7 +58,8 @@
 		this.start = function(mode) {
 
 			if (mode == 1) {
-
+				// sell page mode
+				
 				openAuctions.update();
 				closedAuctions.update();
 				auctionForm.activateForm();
@@ -67,6 +72,8 @@
 
 			}
 			else if (mode == 2) {
+				// buy page mode
+				
 				sellPage.hide();
 				buyPage.show();
 
