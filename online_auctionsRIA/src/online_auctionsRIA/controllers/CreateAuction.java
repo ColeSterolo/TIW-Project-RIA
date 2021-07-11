@@ -36,6 +36,7 @@ import online_auctionsRIA.exceptions.NotUniqueNameException;
 import online_auctionsRIA.utils.ConnectionHandler;
 import online_auctionsRIA.utils.ImageUtils;
 
+@MultipartConfig
 @WebServlet("/CreateAuction")
 public class CreateAuction extends HttpServlet{
 	
