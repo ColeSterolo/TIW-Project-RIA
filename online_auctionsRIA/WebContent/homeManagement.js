@@ -213,10 +213,11 @@
 								row.appendChild(cell);
 
 								document.getElementById("openAuctions_body").appendChild(row);
+								document.getElementById("openAuctions_table").style.display = "block";
 
 							});
 						} else {
-							document.getElementById("openAuctions_table").style.visibility = "hidden";
+							document.getElementById("openAuctions_table").style.display = "none";
 							document.getElementById("openAuctions_message").innerHTML = "You have no open auctions";
 						}
 					}
@@ -469,9 +470,7 @@
 
 		this.activateForm = function() {
 
-			var message = document.getElementById("sellForm_message");
-			document.getElementById("sellForm_message").innerHTML = "";
-
+			document.getElementById("sellForm_message").textContent = "";
 			document.getElementById("createAuctionButton").addEventListener('click', (e) => {
 				e.preventDefault();
 				var form = document.getElementById("sellForm_form");
@@ -483,7 +482,7 @@
 								switch (req.status) {
 									case 200:
 										openAuctions.update();
-										message.innerHTML = "Auction created succesfully";
+										document.getElementById("sellForm_message").textContent = "Auction created succesfully";
 										setLastAction("creation");
 										break;
 									case 400: // bad request
