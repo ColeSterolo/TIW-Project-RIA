@@ -36,6 +36,7 @@ import online_auctionsRIA.exceptions.NotUniqueNameException;
 import online_auctionsRIA.utils.ConnectionHandler;
 import online_auctionsRIA.utils.ImageUtils;
 
+@MultipartConfig
 @WebServlet("/CreateAuction")
 public class CreateAuction extends HttpServlet{
 	
@@ -71,6 +72,7 @@ public class CreateAuction extends HttpServlet{
 		Instant endingTime = null;
 		Instant nowInstant = Instant.now();
 		nowInstant = nowInstant.truncatedTo(ChronoUnit.SECONDS);
+		nowInstant = nowInstant.plus(Duration.ofHours(2));
 		
 		try {
 		name = request.getParameter("itemName");
@@ -97,7 +99,7 @@ public class CreateAuction extends HttpServlet{
 
 		TemporalAccessor temporalAccessor = formatter.parse(dateString);
 		LocalDateTime localDateTime = LocalDateTime.from(temporalAccessor);
-		localDateTime = localDateTime.plus(Duration.ofHours(1));
+		localDateTime = localDateTime.plus(Duration.ofHours(2));
 		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
 		endingTime = Instant.from(zonedDateTime);
 		
@@ -127,7 +129,6 @@ public class CreateAuction extends HttpServlet{
 			byte[] photoByteArray = ImageUtils.readImage(photoContent);
 			
 			if (photoByteArray.length == 0) {
-				//should use sendError
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().println("The selected file is not valid");
 				return;
