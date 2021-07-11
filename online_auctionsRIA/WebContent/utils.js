@@ -70,15 +70,14 @@ function timeDiffCalc(end, start) {
  */
 
 function getCookie(cookieName) {
-	let cookie = {};
+	var ret;
 	document.cookie.split(';').forEach(function(el) {
-		let [key, value] = el.split('=');
-		cookie[key.trim()] = value; //trim() removes white spaces
-		if (key == cookieName) {
-			return el;
+		var [key, value] = el.split('=');
+		if (key.trim() == cookieName) {
+			ret = value;
 		}
 	})
-	return undefined;
+	return ret;
 }
 
 /**
@@ -96,11 +95,12 @@ function setCookie(cname, cvalue) {
  * This function returns a vector containing all the ids of the visited auctions
  */
 function getVisitedAuctions() {
+	var user = sessionStorage.getItem("username").replace(/(\r\n|\n|\r)/gm, "");
 	let ids = [];
 	document.cookie.split(';').forEach(function(el) {
 		let [key, value] = el.split('=');
 		key = key.trim(); //trim() removes white spaces
-		if (key != "lastAction" && key != "") {
+		if (key.includes(user) && key != user) {
 			value = parseInt(value);
 			ids.push(value);
 		}
@@ -109,11 +109,17 @@ function getVisitedAuctions() {
 }
 
 function addVisitedAuction(auctionId) {
-	/*
-	var auction = "Auction" + id;
-	setCookie(auction, id, 30);
-	*/
 	var user = sessionStorage.getItem("username").replace(/(\r\n|\n|\r)/gm, "");
 	var auction = user + auctionId;
 	setCookie(auction, auctionId);
+}
+
+function setLastAction (lastAction) {
+	var user = sessionStorage.getItem("username").replace(/(\r\n|\n|\r)/gm, "");
+	setCookie(user, lastAction);
+}
+
+function getLastAction() {
+	var user = sessionStorage.getItem("username").replace(/(\r\n|\n|\r)/gm, "");
+	return getCookie(user);
 }

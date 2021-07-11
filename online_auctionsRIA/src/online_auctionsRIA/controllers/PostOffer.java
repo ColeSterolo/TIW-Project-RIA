@@ -69,14 +69,25 @@ public class PostOffer extends HttpServlet {
 				resp.getWriter().println("This auction is expired");
 				return;
 			}
-			maxOffer = offerDAO.getMaxOffer(auction).getAmount();
 			minBid = auctionDAO.getMinBid(auction);
-			if(amount - maxOffer < minBid) {
-				resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
-				resp.getWriter().println("This offer is too low: the next offer "
-						+ "needs to be at least " + (maxOffer + minBid));
-				return;
+			try {
+				maxOffer = offerDAO.getMaxOffer(auction).getAmount();
+				if(amount - maxOffer < minBid) {
+					resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+					resp.getWriter().println("This offer is too low: the next offer "
+							+ "needs to be at least " + (maxOffer + minBid));
+					return;
+				}
+			} catch (NullPointerException npe) {
+				maxOffer = auctionDAO.getInitialPrice(auction);
+				if(amount - maxOffer < minBid) {
+					resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+					resp.getWriter().println("This offer is too low: the next offer "
+							+ "needs to be at least " + (maxOffer + minBid));
+					return;
+				}
 			}
+				
 			try {
 				offerDAO.insertOffer(amount, auction, user.getUserId());
 			} catch (SQLException e) {

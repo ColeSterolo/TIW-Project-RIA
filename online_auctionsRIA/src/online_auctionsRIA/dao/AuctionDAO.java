@@ -350,6 +350,22 @@ public class AuctionDAO {
 		}
 		else return null;
 	}
+	
+	public int getInitialPrice(int auctionId) throws SQLException {
+		String query = "SELECT initialPrice FROM auction "
+				+ "WHERE auctionId = ? ";
+		int initialPrice = 0;
+		
+		try (PreparedStatement pstatement = con.prepareStatement(query);) {
+			pstatement.setInt(1, auctionId);
+			try(ResultSet result = pstatement.executeQuery();) {
+				if(result.next()) {
+					initialPrice = result.getInt("initialPrice");
+				}			
+			}
+		}
+		return initialPrice;
+	}
 
 }
 

@@ -28,13 +28,11 @@
 		if (sessionStorage.getItem("username") == null) {
 			window.location.href = "index.html";
 		} else {
-
-			if (getCookie('lastAction') == null) {
-				pageOrchestrator.start(2);
-			} else if (getCookie("lastAction") == "creation") {
-				pageOrchestrator.start(2);
+			lastAction = getLastAction();
+			if (lastAction == "creation") {
+				pageOrchestrator.start(1);
 			} else {
-				pageOrchestrator.start(3);
+				pageOrchestrator.start(2);
 			}
 
 		}
@@ -479,6 +477,7 @@
 									case 200:
 										openAuctions.update();
 										message.innerHTML = "Auction created succesfully";
+										setLastAction("creation");
 										break;
 									case 400: // bad request
 										document.getElementById("sellForm_message").textContent = message;
@@ -643,6 +642,16 @@
 					anchor.href = "#";
 					cell.appendChild(anchor);
 					row.appendChild(cell);
+					// write initial price
+					cell = document.createElement("td");
+					startingPrice = auction.initialPrice;
+					cell.innerHTML = startingPrice;
+					row.appendChild(cell);
+					// write minimum bid
+					cell = document.createElement("td");
+					minBid = auction.minimumBid;
+					cell.innerHTML = minBid;
+					row.appendChild(cell);
 					// write auction ending time
 					cell = document.createElement("td");
 					endingTime = moment.utc(auction.endingTime.seconds * 1000);
@@ -725,6 +734,7 @@
 								switch (req.status) {
 									case 200:
 										self.update();
+										document.getElementById("postOffer_form_message").innerHTML = "";
 										break;
 									case 400: // bad request
 										document.getElementById("postOffer_form_message").textContent = message;
@@ -780,7 +790,7 @@
 		this.updateOffers = function(offers) {
 			document.getElementById("offers_body").innerHTML = "";
 
-			if (offers.length > 0) {
+			if (offers != null && offers.length > 0) {
 				//show offers
 				offers.forEach(function(offer) {
 					row = document.createElement("tr");
@@ -804,10 +814,13 @@
 					row.appendChild(cell);
 
 					document.getElementById("offers_body").appendChild(row);
+					document.getElementById("offers_div").style.display = "block";
 				})
 
 			} else {
+				document.getElementById("offers_div").style.display = "none";
 				document.getElementById("postOffer_form_message").textContent = "No offers for this auction yet";
+				document.getElementById("postOffer_form_message").style.display = "block";
 			}
 
 
@@ -826,8 +839,7 @@
 
 		this.update = function() {
 			ids = getVisitedAuctions();
-			if (ids.length > 0) {
-				makeJsonPostCall("GetAuctionsById", "auctionIds", ids,
+			makeJsonPostCall("GetAuctionsById", "auctionIds", ids,
 					function(req) {
 						if (req.readyState == 4) {
 							var message = req.responseText;
@@ -838,9 +850,7 @@
 						}
 					}
 				);
-			} else {
-				self.hide();
-			}
+			
 		}
 
 		this.show = function(searchResults) {
@@ -877,14 +887,8 @@
 					document.getElementById("visited_auctions").style.display = "block";
 				})
 
-			} else {
-				self.hide();
 			}
 
-		}
-
-		this.hide = function() {
-			document.getElementById("visited_auctions").style.display = "none";
 		}
 
 
