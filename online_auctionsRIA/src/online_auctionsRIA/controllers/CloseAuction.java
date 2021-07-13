@@ -56,9 +56,6 @@ public class CloseAuction extends HttpServlet{
 			auctionDAO.closeAuction(auctionId);
 		} catch (SQLException e) {
 			
-			//for debugging
-			e.printStackTrace();
-			
 			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
 			response.getWriter().println("Could not close auction in the db");
 			return;
@@ -67,9 +64,6 @@ public class CloseAuction extends HttpServlet{
 		try {
 			offerDAO.setWinningFlag(auctionId);
 		} catch (SQLException e) {
-			
-			//for debugging
-			e.printStackTrace();
 			
 			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
 			response.getWriter().println("Could not set the winning offer in the db");

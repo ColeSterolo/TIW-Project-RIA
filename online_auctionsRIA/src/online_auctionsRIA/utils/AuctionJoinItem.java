@@ -1,10 +1,6 @@
 package online_auctionsRIA.utils;
 
-import java.time.Instant;
 
-import javax.servlet.http.Part;
-
-import online_auctionsRIA.beans.AuctionBean;
 import online_auctionsRIA.beans.Item;
 import online_auctionsRIA.beans.UserBean;
 
