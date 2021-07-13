@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
@@ -88,9 +87,6 @@ public class GetAuctionDetails extends HttpServlet{
 		try {
 			offers = offerDAO.getOffersJoinUser(auctionId);
 		} catch (SQLException e) {
-			
-			//for debugging
-			e.printStackTrace();
 			
 			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
 			response.getWriter().println("Error in the retrieval of offers");
