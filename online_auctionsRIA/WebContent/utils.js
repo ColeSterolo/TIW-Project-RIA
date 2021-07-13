@@ -38,30 +38,34 @@ function makeJsonPostCall(url, paramName, parameter, callback) {
  */
 
 function timeDiffCalc(end, start) {
-	let diffInMilliSeconds = Math.abs(end - start) / 1000;
+	if (moment(start).isAfter(end)) {
+		return "Expired";
+	} else {
+		let diffInMilliSeconds = Math.abs(end - start) / 1000;
 
-	// calculate days
-	const days = Math.floor(diffInMilliSeconds / 86400);
-	diffInMilliSeconds -= days * 86400;
+		// calculate days
+		const days = Math.floor(diffInMilliSeconds / 86400);
+		diffInMilliSeconds -= days * 86400;
 
-	// calculate hours
-	const hours = Math.floor(diffInMilliSeconds / 3600) % 24;
-	diffInMilliSeconds -= hours * 3600;
+		// calculate hours
+		const hours = Math.floor(diffInMilliSeconds / 3600) % 24;
+		diffInMilliSeconds -= hours * 3600;
 
-	// calculate minutes
-	const minutes = Math.floor(diffInMilliSeconds / 60) % 60;
-	diffInMilliSeconds -= minutes * 60;
+		// calculate minutes
+		const minutes = Math.floor(diffInMilliSeconds / 60) % 60;
+		diffInMilliSeconds -= minutes * 60;
 
-	let difference = '';
-	if (days > 0) {
-		difference += (days === 1) ? `${days} day, ` : `${days} days, `;
+		let difference = '';
+		if (days > 0) {
+			difference += (days === 1) ? `${days} day, ` : `${days} days, `;
+		}
+
+		difference += (hours === 0 || hours === 1) ? `${hours} hour, ` : `${hours} hours, `;
+
+		difference += (minutes === 0 || hours === 1) ? `${minutes} minutes` : `${minutes} minutes`;
+
+		return difference;
 	}
-
-	difference += (hours === 0 || hours === 1) ? `${hours} hour, ` : `${hours} hours, `;
-
-	difference += (minutes === 0 || hours === 1) ? `${minutes} minutes` : `${minutes} minutes`;
-
-	return difference;
 
 }
 
@@ -114,7 +118,7 @@ function addVisitedAuction(auctionId) {
 	setCookie(auction, auctionId);
 }
 
-function setLastAction (lastAction) {
+function setLastAction(lastAction) {
 	var user = sessionStorage.getItem("username").replace(/(\r\n|\n|\r)/gm, "");
 	setCookie(user, lastAction);
 }

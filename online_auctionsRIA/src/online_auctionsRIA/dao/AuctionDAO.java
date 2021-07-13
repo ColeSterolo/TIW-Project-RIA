@@ -260,7 +260,7 @@ public class AuctionDAO {
 		List<AuctionBean> auctions = new ArrayList<AuctionBean>();
 		
 		if(ids != null && !ids.isEmpty()) {
-			String queryString = "SELECT * FROM auction WHERE closedFlag = false AND auctionId in (?";
+			String queryString = "SELECT * FROM auction WHERE closedFlag = 0 AND auctionId in (?";
 			
 			for(idCounter = 1; idCounter < ids.size(); idCounter++) {
 				queryString = queryString + ", ?";
