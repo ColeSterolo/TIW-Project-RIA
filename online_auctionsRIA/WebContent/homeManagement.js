@@ -330,8 +330,6 @@
 		}
 
 		this.clear = function() {
-
-			document.getElementById("auctionDetails_h2").innerHTML = "";
 			document.getElementById("openAuctionDetails_message").innerHTML = "";
 			document.getElementById("openAuctionDetails_body").innerHTML = "";
 			document.getElementById("closedAuctionDetails").innerHTML = "";

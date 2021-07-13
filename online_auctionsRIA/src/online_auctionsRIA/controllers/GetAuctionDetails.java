@@ -29,7 +29,7 @@ import online_auctionsRIA.utils.AuctionJoinItem;
 import online_auctionsRIA.utils.ConnectionHandler;
 import online_auctionsRIA.utils.OfferJoinUser;
 
-@WebServlet("/GetOpenAuctionDetails")
+@WebServlet("/GetAuctionDetails")
 public class GetAuctionDetails extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
