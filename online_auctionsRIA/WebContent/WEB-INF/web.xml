@@ -17,7 +17,7 @@
 	</context-param>
 	<context-param>
 		<param-name>dbPassword</param-name>
-		<param-value>Bastiglia1789!</param-value>
+		<param-value>potato97</param-value>
 	</context-param>
 	<context-param>
 		<param-name>dbDriver</param-name>
@@ -40,7 +40,6 @@
 		<url-pattern>/GetOpenAuctionDetails</url-pattern>
 		<url-pattern>/GetWinningOffers</url-pattern>
 		<url-pattern>/PostOffer</url-pattern>
-		<url-pattern>/RegisterUser</url-pattern>
 		<url-pattern>/Search</url-pattern>
 		<url-pattern>/ShowOffers</url-pattern>
 		<url-pattern>/HomePage.html</url-pattern>

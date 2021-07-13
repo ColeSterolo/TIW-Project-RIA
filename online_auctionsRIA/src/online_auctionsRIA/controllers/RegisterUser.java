@@ -75,9 +75,6 @@ public class RegisterUser extends HttpServlet{
 			return;
 		}
 
-		//String path = getServletContext().getContextPath() + "/GoToIndex";
-		//response.sendRedirect(path);
-
 		response.setStatus(HttpServletResponse.SC_OK);
 
 		}

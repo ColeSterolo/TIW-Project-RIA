@@ -39,7 +39,7 @@ public class CloseAuction extends HttpServlet {
 		templateResolver.setSuffix(".html");
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		AuctionDAO auctionDAO = new AuctionDAO(connection);
