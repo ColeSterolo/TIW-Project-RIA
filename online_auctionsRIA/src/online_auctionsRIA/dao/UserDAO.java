@@ -43,26 +43,6 @@ public class UserDAO {
 		return code;
 	}
 
-	public int deleteUser(UserBean user) throws SQLException {
-		String query = "DELETE FROM user_table WHERE username = ?";
-		int resultCode = 0;
-		PreparedStatement pstatement = null;
-		try {
-			pstatement = con.prepareStatement(query);
-			pstatement.setString(1, user.getUsername());
-			resultCode = pstatement.executeUpdate();
-		} catch (SQLException e) {
-			throw new SQLException(e);
-		} finally {
-			try {
-				if (pstatement != null)
-					pstatement.close();
-			} catch (Exception e1) {
-				throw e1;
-			}
-		}
-		return resultCode;
-	}
 
 	public UserBean checkCredentials(String username, String pword) throws SQLException, CredentialException {
 		String query = "SELECT * FROM user_table WHERE username = ?";

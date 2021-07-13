@@ -49,33 +49,6 @@ public class AuctionDAO {
 
 	}
 
-	public List<AuctionBean> getOpenAuctions(UserBean user) throws SQLException {
-
-		String query = "SELECT * FROM auction WHERE closedFlag = 0 AND vendor = ?";
-		List <AuctionBean> openAuctions = new ArrayList<AuctionBean>();
-
-		try (PreparedStatement pstatement = con.prepareStatement(query);) {
-			pstatement.setInt(1, user.getUserId());
-			try(ResultSet result = pstatement.executeQuery();) {
-
-				while (result.next()) {
-					AuctionBean auction = new AuctionBean();
-					auction.setAuctionId(result.getInt("auctionId"));
-					auction.setVendor(result.getInt("vendor"));
-					auction.setStartingTime(result.getDate("startingTime").toInstant());
-					auction.setEndingTime(result.getDate("endingTime").toInstant());
-					auction.setClosedFlag(result.getBoolean("closedFlag"));
-					auction.setInitialPrice(result.getInt("initialPrice"));
-					auction.setMinimumBid(result.getInt("minimumBid"));
-
-					openAuctions.add(auction);				
-				}
-			}
-		}
-		return openAuctions;
-	}
-
-
 	public List<AuctionJoinItem> getOpenAuctionsJoinItem(UserBean user) throws SQLException {
 
 		String query = "SELECT * FROM auction JOIN item ON auctionId = auction WHERE closedFlag = 0 AND vendor = ?";
@@ -145,31 +118,6 @@ public class AuctionDAO {
 			return closedAuctions;
 	}
 
-	public List<AuctionBean> getClosedAuctions(UserBean user) throws SQLException {
-
-		String query = "SELECT * FROM auction WHERE closedFlag = 1 AND vendor = ?";
-		List <AuctionBean> closedAuctions = new ArrayList<AuctionBean>();
-
-		try (PreparedStatement pstatement = con.prepareStatement(query);) {
-			pstatement.setInt(1, user.getUserId());
-			try(ResultSet result = pstatement.executeQuery();) {
-
-				while (result.next()) {
-					AuctionBean auction = new AuctionBean();
-					auction.setAuctionId(result.getInt("auctionId"));
-					auction.setVendor(result.getInt("vendor"));
-					auction.setStartingTime(result.getDate("startingTime").toInstant());
-					auction.setEndingTime(result.getDate("endingTime").toInstant());
-					auction.setClosedFlag(result.getBoolean("closedFlag"));
-					auction.setInitialPrice(result.getInt("initialPrice"));
-					auction.setMinimumBid(result.getInt("minimumBid"));
-
-					closedAuctions.add(auction);				
-				}
-			}
-		}
-		return closedAuctions;
-	}
 
 	public void closeAuction (int auctionId) throws SQLException {		
 		String query = "UPDATE auction SET closedFlag = 1 WHERE auctionId = ?";
