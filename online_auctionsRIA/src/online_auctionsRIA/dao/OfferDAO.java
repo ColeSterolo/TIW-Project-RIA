@@ -49,8 +49,8 @@ public class OfferDAO {
 
 
 	public int insertOffer(int amount, int auction, int bidder) throws SQLException{
-		String query = "INSERT into offer (amount, auction, bidder, winningOffer, offerTimestamp)   "
-				+ "VALUES(?, ?, ?, ?, NOW())";
+		String query = "INSERT into offer (amount, auction, bidder, offerTimestamp)   "
+				+ "VALUES(?, ?, ?, NOW())";
 		int code = 0;
 		PreparedStatement pstatement = null;
 		
@@ -60,11 +60,11 @@ public class OfferDAO {
 			pstatement.setInt(1, amount);
 			pstatement.setInt(2, auction);
 			pstatement.setInt(3, bidder);
-			pstatement.setBoolean(4, false);
 			
 			code = pstatement.executeUpdate();
 			
 		}catch(SQLException e) {
+			e.printStackTrace();
 			throw new SQLException(e);
 		}finally {
 			try {
