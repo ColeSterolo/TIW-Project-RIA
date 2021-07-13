@@ -50,7 +50,7 @@ public class AuctionDAO {
 
 	public List<AuctionJoinItem> getOpenAuctionsJoinItem(UserBean user) throws SQLException {
 
-		String query = "SELECT * FROM auction JOIN item ON auctionId = auction WHERE closedFlag = 0 AND vendor = ?";
+		String query = "SELECT * FROM auction JOIN item ON auctionId = auction WHERE closedFlag = 0 AND vendor = ? ORDER BY endingTime ASC";
 		List <AuctionJoinItem> openAuctions = new ArrayList<AuctionJoinItem>();
 
 		try (PreparedStatement pstatement = con.prepareStatement(query);) {
@@ -85,7 +85,7 @@ public class AuctionDAO {
 
 	public List<AuctionJoinItem> getClosedAuctionsJoinItem(UserBean user) throws SQLException {
 
-		String query = "SELECT * FROM auction JOIN item ON auctionId = auction WHERE closedFlag != 0 AND vendor = ?";
+		String query = "SELECT * FROM auction JOIN item ON auctionId = auction WHERE closedFlag != 0 AND vendor = ? ORDER BY endingTime ASC";
 		List <AuctionJoinItem> closedAuctions = new ArrayList<AuctionJoinItem>();
 
 		try (PreparedStatement pstatement = con.prepareStatement(query);) {

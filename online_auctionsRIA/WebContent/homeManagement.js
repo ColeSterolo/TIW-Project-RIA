@@ -262,7 +262,13 @@
 										cell = document.createElement("td");
 										cell.innerHTML = offer.user.username;
 										row.appendChild(cell);
-
+										
+										cell = document.createElement("td")
+										offerTime = moment.utc(offer.offer.datetime.seconds * 1000);
+										formattedOfferTime = offerTime.format('YYYY/MM/DD HH:mm');
+										cell.innerHTML = formattedOfferTime;
+										row.appendChild(cell);
+										
 										document.getElementById("openAuctionDetails_body").appendChild(row);
 
 									});
