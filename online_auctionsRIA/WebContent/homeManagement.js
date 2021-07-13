@@ -283,7 +283,7 @@
 
 										document.getElementById("openAuctionDetails_body").appendChild(row);
 
-									})
+									});
 								} else {
 									document.getElementById("openAuctionDetails_table").style.display = "none";
 									openAuctionDetails_message.innerHTML = "No offers";
