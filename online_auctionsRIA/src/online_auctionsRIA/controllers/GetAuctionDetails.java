@@ -31,7 +31,7 @@ import online_auctionsRIA.utils.ConnectionHandler;
 import online_auctionsRIA.utils.OfferJoinUser;
 
 @WebServlet("/GetOpenAuctionDetails")
-public class GetOpenAuctionDetails extends HttpServlet{
+public class GetAuctionDetails extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;

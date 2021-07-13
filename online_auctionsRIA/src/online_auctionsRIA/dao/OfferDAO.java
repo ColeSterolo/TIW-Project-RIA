@@ -206,34 +206,5 @@ public class OfferDAO {
 		return offer;
 	}
 
-	
-	
-	public void setWinningFlag (int auctionId) throws SQLException {
-		
-			String query1 = "SELECT max(amount) FROM offer where auction = ?";
-			int amount = -1;
-			String query = "UPDATE offer SET winningOffer = 1 "
-					+ "WHERE auction = ? "
-					+ "AND amount = ?";
-			
-		try (PreparedStatement pstatement = con.prepareStatement(query1);) {
-			pstatement.setInt(1, auctionId);
-			
-			try (ResultSet result = pstatement.executeQuery();) {
-				if(result.next())
-					amount = result.getInt("max(amount)");
-			}
-		}
-		if(amount != -1) {
-			try (PreparedStatement pstatement = con.prepareStatement(query);) {
-				pstatement.setInt(1, auctionId);
-				pstatement.setInt(2, amount);
-				pstatement.executeUpdate();
-			}
-		}
-		
-		else throw new SQLException("error in setting of winning flag on offers");
-		
-	}
 
 }

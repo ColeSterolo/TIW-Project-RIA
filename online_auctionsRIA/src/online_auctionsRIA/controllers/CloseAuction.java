@@ -16,7 +16,6 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import online_auctionsRIA.dao.AuctionDAO;
-import online_auctionsRIA.dao.OfferDAO;
 import online_auctionsRIA.utils.ConnectionHandler;
 
 @WebServlet("/CloseAuction")
@@ -41,7 +40,6 @@ public class CloseAuction extends HttpServlet{
 			throws ServletException, IOException {
 		
 		AuctionDAO auctionDAO = new AuctionDAO(connection);
-		OfferDAO offerDAO = new OfferDAO(connection);
 		
 		Integer auctionId = null;
 		try {
@@ -51,33 +49,18 @@ public class CloseAuction extends HttpServlet{
 			return;
 		}
 		
-		//TODO check if the auction is valid and open
+
 		try {
 			auctionDAO.closeAuction(auctionId);
 		} catch (SQLException e) {
-			
-			//for debugging
-			e.printStackTrace();
-			
+		
 			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
 			response.getWriter().println("Could not close auction in the db");
 			return;
 		}
 		
-		try {
-			offerDAO.setWinningFlag(auctionId);
-		} catch (SQLException e) {
-			
-			//for debugging
-			e.printStackTrace();
-			
-			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
-			response.getWriter().println("Could not set the winning offer in the db");
-			return;
-		}
-		
 		response.setStatus(HttpServletResponse.SC_OK);
-		
+	
 	}
 
 }
