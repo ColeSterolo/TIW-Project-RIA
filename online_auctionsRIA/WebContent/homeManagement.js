@@ -171,6 +171,10 @@
 								cell = document.createElement("td");
 								cell.innerHTML = auction.item.description;
 								row.appendChild(cell);
+								
+								cell = document.createElement("td");
+								cell.innerHTML = auction.auction.initialPrice;
+								row.appendChild(cell);
 
 								cell = document.createElement("td");
 								if (auction.remainingDays == 0 && auction.remainingHours == 0 && auction.remainingMinutes == 0) {
@@ -289,6 +293,20 @@
 									document.getElementById("openAuctionDetails_div2").style.display = "block";
 
 								} else {
+									
+									if (auction.remainingDays == 0 && auction.remainingHours == 0 && auction.remainingMinutes == 0) {
+										var button = document.createElement("button");
+										button.innerHTML = "Close auction";
+										button.id = "closeButton";
+										button.addEventListener('click', (e) => {
+											e.preventDefault();
+											var closeAuction = new CloseAuction();
+											closeAuction.close(auction.auction.auctionId);
+											document.getElementById("closeButton").remove();
+										});
+										document.getElementById("openAuctionDetails_div").appendChild(button);
+									}
+									
 									document.getElementById("openAuctionDetails_div2").style.display = "none";
 									openAuctionDetails_message.innerHTML = "This auction does not have any offer";
 									
@@ -868,12 +886,8 @@
 					document.getElementById("visitedAuctions_body").appendChild(row);
 					document.getElementById("visited_auctions").style.display = "block";
 				})
-
 			}
-
 		}
-
-
 	}
 
 }());
