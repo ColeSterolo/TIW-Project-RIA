@@ -3,6 +3,8 @@ package online_auctionsRIA.controllers;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -56,11 +58,11 @@ public class CloseAuction extends HttpServlet {
 		try {
 			UserBean user = (UserBean) request.getSession().getAttribute("user");
 			AuctionJoinItem auction = auctionDAO.getAuctionJoinItem(auctionId);
-			if (auctionDAO.isExpired(auctionId) && auction.getAuction().getVendor() == user.getUserId()) {
+
+			if (auction.getAuction().getEndingTime().isBefore(Instant.now().plus(Duration.ofHours(2))) && auction.getAuction().getVendor() == user.getUserId()) {
 				auctionDAO.closeAuction(auctionId);
 			} else {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().println("This auction cannot be closed");
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, "This auction cannot be closed");
 				return;
 			}
 		} catch (SQLException e) {

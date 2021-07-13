@@ -100,6 +100,7 @@ public class AuctionDAO {
 					auction.getAuction().setEndingTime(instant);
 					auction.getAuction().setInitialPrice(result.getInt("initialPrice"));
 					auction.getAuction().setMinimumBid(result.getInt("minimumBid"));
+					auction.getAuction().setVendor(result.getInt("vendor"));
 
 					auction.getItem().setDescription(result.getString("description"));
 					auction.getItem().setItemId(result.getInt("itemId"));
