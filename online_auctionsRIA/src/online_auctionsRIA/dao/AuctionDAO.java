@@ -4,7 +4,6 @@ package online_auctionsRIA.dao;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -121,7 +120,6 @@ public class AuctionDAO {
 
 	public void closeAuction (int auctionId) throws SQLException {		
 		String query = "UPDATE auction SET closedFlag = 1 WHERE auctionId = ?";
-		OfferDAO offerDAO = new OfferDAO(con);
 		con.setAutoCommit(false);
 
 		try (PreparedStatement pstatement = con.prepareStatement(query);) {
@@ -147,7 +145,6 @@ public class AuctionDAO {
 		List<AuctionBean> openAuctions = new ArrayList<AuctionBean>();
 
 		try (PreparedStatement pstatement = con.prepareStatement(query);) {
-			//pstatement.setTimestamp(1, now);
 			pstatement.setString(1, keyword);
 			pstatement.setString(2, keyword);
 			try (ResultSet result = pstatement.executeQuery();) {
@@ -212,6 +209,7 @@ public class AuctionDAO {
 					auction.getAuction().setEndingTime(instant);
 					auction.getAuction().setInitialPrice(result.getInt("initialPrice"));
 					auction.getAuction().setMinimumBid(result.getInt("minimumBid"));
+					auction.getAuction().setVendor(result.getInt("vendor"));
 
 					auction.getItem().setDescription(result.getString("description"));
 					auction.getItem().setItemId(result.getInt("itemId"));

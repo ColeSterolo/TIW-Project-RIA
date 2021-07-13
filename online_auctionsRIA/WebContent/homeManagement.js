@@ -236,7 +236,7 @@
 
 		this.showDetails = function(auction, isOpen) {
 
-			makeCall("GET", "GetOpenAuctionDetails?auctionId=" + auction.auction.auctionId, null,
+			makeCall("GET", "GetAuctionDetails?auctionId=" + auction.auction.auctionId, null,
 				function(req) {
 					if (req.readyState == 4) {
 						var message = req.responseText;
@@ -317,7 +317,7 @@
 
 
 						} else {
-							document.getElementById("auctionDetails_h2").innerHTML = message;
+							document.getElementById("openAuctionDetails_message").innerHTML = message;
 
 						}
 					}
@@ -342,6 +342,7 @@
 	function CloseAuction() {
 
 		this.close = function(auctionId) {
+			document.getElementById("closedAuctions_message").textContent = "";
 			makeCall("GET", "CloseAuction?auctionId=" + auctionId, null,
 				function(req) {
 					if (req.readyState == XMLHttpRequest.DONE) {
@@ -350,7 +351,7 @@
 							case 200:
 								openAuctions.update();
 								closedAuctions.update();
-								message.innerHTML = "Auction closed succesfully";
+								document.getElementById("closedAuctions_message").innerHTML = "Auction closed succesfully";
 								break;
 							case 400: // bad request
 								document.getElementById("closedAuctions_message").textContent = message;
