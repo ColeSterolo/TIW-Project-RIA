@@ -37,7 +37,7 @@ public class CheckLogin extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// obtain and escape params
+		// obtain and escape parameters
 		String usrn = null;
 		String pwd = null;
 		usrn = StringEscapeUtils.escapeJava(request.getParameter("username"));
@@ -58,11 +58,7 @@ public class CheckLogin extends HttpServlet {
 			response.getWriter().println("Internal server error, retry later");
 			return;
 		} catch (CredentialException e) {
-			
 			user = null;
-			
-			//for debugging
-			e.printStackTrace();
 		}
 
 		// If the user exists, add info to the session and go to home page, otherwise

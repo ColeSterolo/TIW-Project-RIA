@@ -138,13 +138,13 @@ public class CreateAuction extends HttpServlet{
 				response.getWriter().println("The inserted initial price is not valid");
 				return;
 
-			}else if(minBid < 0) {
+			}else if(minBid <= 0) {
 				
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				response.getWriter().println("The inserted minimum bid is not valid");
 				return;
 				
-			} else { //checks on date missing
+			} else {
 
 				HttpServletRequest req = (HttpServletRequest) request;
 				HttpSession session = req.getSession();

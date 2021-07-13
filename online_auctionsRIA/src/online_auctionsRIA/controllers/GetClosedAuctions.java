@@ -60,11 +60,8 @@ public class GetClosedAuctions extends HttpServlet{
 		try {
 			closedAuctions = auctionDAO.getClosedAuctionsJoinItem(user);
 		}catch(SQLException e) {
-			
-			//for debugging
-			e.printStackTrace();
-			
-			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Error in the retrieval of closed auctions from db");
 			return;
 		}
 		
@@ -75,7 +72,8 @@ public class GetClosedAuctions extends HttpServlet{
 					maxOffer = offerDAO.getAuctionMaxOfferJoinUser(a.getAuction().getAuctionId());
 				} catch (SQLException e) {
 										
-					response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					response.getWriter().println("Error in the retrieval of max offer");
 					return;
 				}
 				if (maxOffer != null) {

@@ -15,18 +15,21 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import online_auctionsRIA.beans.UserBean;
+import online_auctionsRIA.exceptions.DbIncoherenceException;
+import online_auctionsRIA.utils.AuctionJoinItem;
 import online_auctionsRIA.dao.AuctionDAO;
 import online_auctionsRIA.utils.ConnectionHandler;
 
 @WebServlet("/CloseAuction")
-public class CloseAuction extends HttpServlet{
-	
+public class CloseAuction extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
 	private TemplateEngine templateEngine;
-	
+
 	public void init() throws ServletException {
-		
+
 		connection = ConnectionHandler.getConnection(getServletContext());
 		ServletContext servletContext = getServletContext();
 		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
@@ -35,32 +38,43 @@ public class CloseAuction extends HttpServlet{
 		this.templateEngine.setTemplateResolver(templateResolver);
 		templateResolver.setSuffix(".html");
 	}
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		AuctionDAO auctionDAO = new AuctionDAO(connection);
-		
+
 		Integer auctionId = null;
 		try {
 			auctionId = Integer.parseInt(request.getParameter("auctionId"));
 		} catch (Exception e) {
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid auction parameters");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().println("Invalid parameters");
 			return;
 		}
-		
 
 		try {
-			auctionDAO.closeAuction(auctionId);
+			UserBean user = (UserBean) request.getSession().getAttribute("user");
+			AuctionJoinItem auction = auctionDAO.getAuctionJoinItem(auctionId);
+			if (auctionDAO.isExpired(auctionId) && auction.getAuction().getVendor() == user.getUserId()) {
+				auctionDAO.closeAuction(auctionId);
+			} else {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				response.getWriter().println("This auction cannot be closed");
+				return;
+			}
 		} catch (SQLException e) {
-		
-			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
-			response.getWriter().println("Could not close auction in the db");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println("Error in the closure of an auction in the db");
+			return;
+		} catch (DbIncoherenceException e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().println(e.getMessage());
 			return;
 		}
-		
+
 		response.setStatus(HttpServletResponse.SC_OK);
-	
+
 	}
 
 }

@@ -31,14 +31,14 @@ import online_auctionsRIA.utils.ConnectionHandler;
 import online_auctionsRIA.utils.OfferJoinUser;
 
 @WebServlet("/GetOpenAuctionDetails")
-public class GetAuctionDetails extends HttpServlet{
+public class GetAuctionDetails extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private Connection connection = null;
 	private TemplateEngine templateEngine;
-	
+
 	public void init() throws ServletException {
-		
+
 		connection = ConnectionHandler.getConnection(getServletContext());
 		ServletContext servletContext = getServletContext();
 		ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
@@ -47,19 +47,18 @@ public class GetAuctionDetails extends HttpServlet{
 		this.templateEngine.setTemplateResolver(templateResolver);
 		templateResolver.setSuffix(".html");
 	}
-	
-	
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		AuctionDAO auctionDAO = new AuctionDAO(connection);
 		OfferDAO offerDAO = new OfferDAO(connection);
 		AuctionJoinItem auction = null;
 		List<OfferJoinUser> offers = new ArrayList<OfferJoinUser>();
-		
+
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpSession session = req.getSession();
-		
+
 		Integer auctionId = null;
 		try {
 			auctionId = Integer.parseInt(request.getParameter("auctionId"));
@@ -68,10 +67,10 @@ public class GetAuctionDetails extends HttpServlet{
 			response.getWriter().println("Invalid auction parameter");
 			return;
 		}
-		
+
 		try {
 			auction = auctionDAO.getAuctionJoinItem(auctionId);
-			
+
 		} catch (SQLException e) {
 			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
 			response.getWriter().println("Error in the retrieval of auction join item");
@@ -81,30 +80,32 @@ public class GetAuctionDetails extends HttpServlet{
 			response.getWriter().println(e.getMessage());
 			return;
 		}
-		
-		Instant loginTime = (Instant) session.getAttribute("loginTime");
-		auction.getAuction().setRemainingTime(loginTime);
-		
-		try {
-			offers = offerDAO.getOffersJoinUser(auctionId);
-		} catch (SQLException e) {
-			
-			//for debugging
-			e.printStackTrace();
-			
-			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
-			response.getWriter().println("Error in the retrieval of offers");
-			return;
-		}
-		
 
-		Gson gson = new GsonBuilder().setDateFormat("yyyy MMM dd").create();
-		String json = gson.toJson(offers);
-		
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(json);
-		
+		if (auction == null) {
+			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+			response.getWriter().println("Auction not found");
+			return;
+		} else {
+
+			Instant loginTime = (Instant) session.getAttribute("loginTime");
+			auction.getAuction().setRemainingTime(loginTime);
+
+			try {
+				offers = offerDAO.getOffersJoinUser(auctionId);
+			} catch (SQLException e) {
+
+				response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+				response.getWriter().println("Error in the retrieval of offers");
+				return;
+			}
+
+			Gson gson = new GsonBuilder().setDateFormat("yyyy MMM dd").create();
+			String json = gson.toJson(offers);
+
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(json);
+		}
 	}
-	
+
 }
