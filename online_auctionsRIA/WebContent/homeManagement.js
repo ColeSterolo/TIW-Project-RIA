@@ -4,6 +4,7 @@
 	var openAuctions, closedAuctions, auctionForm;
 	var searchAuctions, offersDetails, visitedAuctions, winningOffers;
 	var sellPage;
+	var lastAction = getLastAction();
 
 	document.getElementById("goToBuyPageButton").addEventListener('click', (e) => {
 		e.preventDefault();
@@ -28,11 +29,11 @@
 		if (user == null) {
 			window.location.href = "index.html";
 		} else {
-			lastAction = getLastAction();
 			if (lastAction == "creation") {
 				// delete last action cookie
 				cookieString = user.trim() + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 				document.cookie = cookieString;
+				lastAction == "";
 				pageOrchestrator.start(1);
 			} else {
 				// if last action != createAuction
@@ -171,7 +172,7 @@
 								cell = document.createElement("td");
 								cell.innerHTML = auction.item.description;
 								row.appendChild(cell);
-								
+
 								cell = document.createElement("td");
 								cell.innerHTML = auction.auction.initialPrice;
 								row.appendChild(cell);
@@ -224,7 +225,7 @@
 						} else {
 							document.getElementById("openAuctions_div2").style.display = "none";
 							document.getElementById("openAuctions_message").innerHTML = "You have no open auctions";
-							
+
 						}
 					}
 				}
@@ -249,7 +250,7 @@
 							offers = JSON.parse(req.responseText);
 							document.getElementById("openAuctionDetails_message").innerHTML = "";
 							document.getElementById("openAuctionDetails_body").innerHTML = "";
-							if (isOpen) {								
+							if (isOpen) {
 								document.getElementById("openAuctionDetails_message").innerHTML = "Auction " +
 									auction.auction.auctionId + " details: offers";
 								document.getElementById("openAuctionDetails_div").style.display = "block";
@@ -266,17 +267,17 @@
 										cell = document.createElement("td");
 										cell.innerHTML = offer.user.username;
 										row.appendChild(cell);
-										
+
 										cell = document.createElement("td")
 										offerTime = moment.utc(offer.offer.datetime.seconds * 1000);
 										formattedOfferTime = offerTime.format('YYYY/MM/DD HH:mm');
 										cell.innerHTML = formattedOfferTime;
 										row.appendChild(cell);
-										
+
 										document.getElementById("openAuctionDetails_body").appendChild(row);
 
 									});
-									
+
 									if (auction.remainingDays == 0 && auction.remainingHours == 0 && auction.remainingMinutes == 0) {
 										var button = document.createElement("button");
 										button.innerHTML = "Close auction";
@@ -289,11 +290,11 @@
 										});
 										document.getElementById("openAuctionDetails_div").appendChild(button);
 									}
-									
+
 									document.getElementById("openAuctionDetails_div2").style.display = "block";
 
 								} else {
-									
+
 									if (auction.remainingDays == 0 && auction.remainingHours == 0 && auction.remainingMinutes == 0) {
 										var button = document.createElement("button");
 										button.innerHTML = "Close auction";
@@ -306,10 +307,10 @@
 										});
 										document.getElementById("openAuctionDetails_div").appendChild(button);
 									}
-									
+
 									document.getElementById("openAuctionDetails_div2").style.display = "none";
 									openAuctionDetails_message.innerHTML = "This auction does not have any offer";
-									
+
 								}
 
 							} else {
@@ -364,6 +365,9 @@
 								openAuctions.update();
 								closedAuctions.update();
 								document.getElementById("closedAuctions_message").innerHTML = "Auction closed succesfully";
+								// delete last action cookie
+								cookieString = user.trim() + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+								document.cookie = cookieString;
 								break;
 							case 400: // bad request
 								document.getElementById("closedAuctions_message").textContent = message;
@@ -613,6 +617,9 @@
 								switch (req.status) {
 									case 200:
 										self.update(JSON.parse(req.responseText));
+										// delete last action cookie
+										cookieString = user.trim() + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+										document.cookie = cookieString;
 										break;
 									case 400: // bad request
 										document.getElementById("searchForm_message").textContent = message;
@@ -742,6 +749,9 @@
 								switch (req.status) {
 									case 200:
 										self.update();
+										// delete last action cookie
+										cookieString = user.trim() + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+										document.cookie = cookieString;
 										document.getElementById("postOffer_form_message").innerHTML = "";
 										break;
 									case 400: // bad request
