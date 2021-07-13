@@ -421,6 +421,14 @@
 								image.setAttribute("width", "200");
 								cell.appendChild(image);
 								row.appendChild(cell);
+								
+								cell = document.createElement("td");
+								cell.innerHTML = auction.auction.initialPrice;
+								row.appendChild(cell);
+								
+								cell = document.createElement("td");
+								cell.innerHTML = auction.auction.minimumBid;
+								row.appendChild(cell);
 
 								cell = document.createElement("td");
 								var button = document.createElement("button");
