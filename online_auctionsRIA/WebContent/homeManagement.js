@@ -213,7 +213,7 @@
 								row.appendChild(cell);
 
 								document.getElementById("openAuctions_body").appendChild(row);
-								document.getElementById("openAuctions_table").style.display = "block";
+								document.getElementById("openAuctions_div").style.display = "block";
 
 							});
 						} else {
@@ -254,7 +254,6 @@
 								document.getElementById("closedAuctionDetails").innerHTML = "";
 
 								if (offers != null && offers.length > 0) {
-									document.getElementById("openAuctionDetails_table").style.display = "block";
 									offers.forEach(function(offer) {
 
 										var row = document.createElement("tr");
@@ -285,7 +284,7 @@
 
 									});
 								} else {
-									document.getElementById("openAuctionDetails_table").style.display = "none";
+									document.getElementById("openAuctionDetails_div").style.display = "none";
 									openAuctionDetails_message.innerHTML = "No offers";
 
 									if (auction.remainingDays == 0 && auction.remainingHours == 0 && auction.remainingMinutes == 0) {
@@ -328,7 +327,6 @@
 
 		this.hide = function() {
 			document.getElementById("openAuctionDetails_div").style.display = "none";
-			document.getElementById("openAuctionDetails_table").style.display = "none";
 		}
 
 		this.clear = function() {
@@ -414,11 +412,11 @@
 								if (auction.winner != null) {
 									cell = document.createElement("td");
 									cell.innerHTML = auction.winner.username;
-									row.appenChild(cell);
+									row.appendChild(cell);
 
 									cell = document.createElement("td");
 									cell.innerHTML = auction.winner.address;
-									row.appenChild(cell);
+									row.appendChild(cell);
 
 								} else {
 									cell = document.createElement("td");
@@ -448,8 +446,7 @@
 
 								document.getElementById("closedAuctions_body").appendChild(row);
 
-								document.getElementById("closedAuctions_tr").style.display = "block";
-								document.getElementById("closedAuctions_table").style.display = "block";
+								document.getElementById("closedAuctions_div").style.display = "block";
 							});
 
 						} else {

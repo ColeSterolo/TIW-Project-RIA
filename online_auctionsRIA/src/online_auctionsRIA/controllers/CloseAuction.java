@@ -64,6 +64,7 @@ public class CloseAuction extends HttpServlet {
 				return;
 			}
 		} catch (SQLException e) {
+
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Error in the closure of an auction in the db");
 			return;

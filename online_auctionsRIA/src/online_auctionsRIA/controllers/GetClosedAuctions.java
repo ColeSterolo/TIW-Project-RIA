@@ -51,7 +51,7 @@ public class GetClosedAuctions extends HttpServlet{
 		
 		OfferDAO offerDAO = new OfferDAO(connection);
 		AuctionDAO auctionDAO = new AuctionDAO(connection);
-		List<AuctionJoinItem> closedAuctions = new ArrayList();	
+		List<AuctionJoinItem> closedAuctions = new ArrayList<AuctionJoinItem>();	
 		
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpSession session = req.getSession();
@@ -60,6 +60,7 @@ public class GetClosedAuctions extends HttpServlet{
 		try {
 			closedAuctions = auctionDAO.getClosedAuctionsJoinItem(user);
 		}catch(SQLException e) {
+
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			response.getWriter().println("Error in the retrieval of closed auctions from db");
 			return;
