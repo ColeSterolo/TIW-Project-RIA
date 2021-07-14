@@ -16,6 +16,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
+import online_auctionsRIA.exceptions.DbIncoherenceException;
 import online_auctionsRIA.beans.UserBean;
 import online_auctionsRIA.dao.AuctionDAO;
 import online_auctionsRIA.dao.OfferDAO;
@@ -69,6 +70,11 @@ public class PostOffer extends HttpServlet {
 				resp.getWriter().println("This auction is expired");
 				return;
 			}
+			if(auctionDAO.getAuctionJoinItem(auction).getAuction().getVendor() == user.getUserId()) {
+				resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				resp.getWriter().println("You cannot make offers to your own auctions");
+				return;
+			}
 			minBid = auctionDAO.getMinBid(auction);
 			try {
 				maxOffer = offerDAO.getMaxOffer(auction).getAmount();
@@ -102,6 +108,10 @@ public class PostOffer extends HttpServlet {
 		} catch (NumberFormatException nfe) {
 			resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			resp.getWriter().println("Invalid non-numeric input");
+			return;
+		}catch(DbIncoherenceException e) {
+			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			resp.getWriter().println(e.getMessage());
 			return;
 		}		
 		
